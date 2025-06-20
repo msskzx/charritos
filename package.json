@@ -6,6 +6,7 @@
     "dev": "next dev --turbopack",
     "build": "next build",
     "start": "next start",
+    "postinstall": "prisma generate",
     "seed:categories": "tsx prisma/categories-seed.ts",
     "seed:profiles": "tsx prisma/profiles-seed.ts",
     "seed:all": "npm run seed:categories && npm run seed:profiles"
