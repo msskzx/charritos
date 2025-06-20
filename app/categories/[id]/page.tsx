@@ -1,0 +1,157 @@
+import React from 'react';
+import Link from 'next/link';
+import NavBar from '../../../components/navbar';
+import Footer from '../../../components/footer';
+import { PrismaClient } from '@prisma/client';
+import { notFound } from 'next/navigation';
+
+const prisma = new PrismaClient();
+
+interface Profile {
+    id: string;
+    name: string;
+    description: string | null;
+    imageUrl: string | null;
+    links: any;
+}
+
+interface Category {
+    id: string;
+    name: string;
+    description: string | null;
+    profiles: Profile[];
+}
+
+interface PageProps {
+    params: {
+        id: string;
+    };
+}
+
+const getCategoryWithProfiles = async (categoryId: string): Promise<Category | null> => {
+    try {
+        const category = await prisma.category.findUnique({
+            where: {
+                id: categoryId
+            },
+            include: {
+                profiles: {
+                    orderBy: {
+                        name: 'asc'
+                    }
+                }
+            }
+        });
+        return category;
+    } catch (error) {
+        console.error('Error fetching category:', error);
+        return null;
+    }
+};
+
+const ProfileListItem: React.FC<{ profile: Profile }> = ({ profile }) => {
+    return (
+        <div className="block p-6 bg-white dark:bg-black rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300 border border-black dark:border-white">
+            <div className="flex flex-col items-center mb-4">
+                <div className="w-20 h-20 flex items-center justify-center rounded-full bg-black dark:bg-white text-white dark:text-black text-4xl font-bold mb-3">
+                    {profile.name.charAt(0)}
+                </div>
+            </div>
+            <h2 className="text-2xl font-bold text-black dark:text-white mb-2 text-center">{profile.name}</h2>
+            <p className="text-black dark:text-white text-sm mb-4 text-center">
+                {profile.description || 'No description available.'}
+            </p>
+
+            {/* Links */}
+            {profile.links && Array.isArray(profile.links) && profile.links.length > 0 && (
+                <div className="flex flex-wrap justify-center gap-2">
+                    {profile.links.map((link: any, index: number) => (
+                        <a
+                            key={index}
+                            href={link.url}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="px-4 py-2 bg-black dark:bg-white text-white dark:text-black text-sm rounded-md hover:bg-gray-800 dark:hover:bg-gray-200 transition-colors"
+                        >
+                            {link.name}
+                        </a>
+                    ))}
+                </div>
+            )}
+        </div>
+    );
+};
+
+// Main Category Page Component
+const CategoryPage = async ({ params }: PageProps) => {
+    const category = await getCategoryWithProfiles(params.id);
+
+    if (!category) {
+        notFound();
+    }
+
+    return (
+        <div className="min-h-screen flex flex-col items-center bg-white dark:bg-black text-black dark:text-white font-inter">
+            <NavBar />
+
+            <main className="flex-grow container mx-auto p-8">
+                {/* Breadcrumb */}
+                <div className="mb-6">
+                    <Link 
+                        href="/categories" 
+                        className="text-black dark:text-white hover:underline"
+                    >
+                        ← Back to Categories
+                    </Link>
+                </div>
+
+                {/* Category Header */}
+                <div className="text-center mb-12">
+                    <div className="w-24 h-24 flex items-center justify-center rounded-full bg-black dark:bg-white text-white dark:text-black text-5xl font-bold mx-auto mb-4">
+                        {category.name.charAt(0)}
+                    </div>
+                    <h1 className="text-4xl font-extrabold text-black dark:text-white mb-4 drop-shadow-lg">
+                        {category.name}
+                    </h1>
+                    {category.description && (
+                        <p className="text-lg text-black dark:text-white max-w-2xl mx-auto">
+                            {category.description}
+                        </p>
+                    )}
+                </div>
+
+                {/* Profiles Count */}
+                <div className="text-center mb-8">
+                    <p className="text-black dark:text-white text-lg">
+                        {category.profiles.length} profile{category.profiles.length !== 1 ? 's' : ''} found
+                    </p>
+                </div>
+
+                {/* Profiles Grid */}
+                {category.profiles.length === 0 ? (
+                    <div className="text-center">
+                        <p className="text-black dark:text-white text-lg my-8">
+                            No profiles found in this category.
+                        </p>
+                        <Link 
+                            href="/profiles" 
+                            className="px-6 py-3 bg-black dark:bg-white text-white dark:text-black rounded-md hover:bg-gray-800 dark:hover:bg-gray-200 transition-colors"
+                        >
+                            View All Profiles
+                        </Link>
+                    </div>
+                ) : (
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                        {category.profiles.map((profile) => (
+                            <ProfileListItem key={profile.id} profile={profile} />
+                        ))}
+                    </div>
+                )}
+            </main>
+
+            <Footer />
+        </div>
+    );
+};
+
+export default CategoryPage; 

@@ -10,8 +10,6 @@ const NavBar: React.FC = () => {
                 </Link>
                 <div className="flex space-x-6">
                     <Link href="/categories" className="text-white rounded-md transition-colors hover:bg-gray-100 hover:bg-gray-800 text-gray-700 dark:text-gray-200 font-medium px-2 py-1">Categories</Link>
-                    <Link href="/about" className="text-white rounded-md transition-colors hover:bg-gray-100 hover:bg-gray-800 text-gray-700 dark:text-gray-200 font-medium px-2 py-1">About</Link>
-                    <Link href="/contact" className="text-white rounded-md transition-colors hover:bg-gray-100 hover:bg-gray-800 text-gray-700 dark:text-gray-200 font-medium px-2 py-1">Contact</Link>
                 </div>
             </div>
         </nav>

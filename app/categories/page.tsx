@@ -2,22 +2,28 @@ import React from 'react';
 import Link from 'next/link'; // Import Link from next/link for client-side navigation
 import NavBar from '../../components/navbar';
 import Footer from '../../components/footer';
+import { PrismaClient } from '@prisma/client';
+
+const prisma = new PrismaClient();
 
 interface Category {
     id: string;
     name: string;
-    description: string;
+    description: string | null;
 }
 
 const getCategories = async (): Promise<Category[]> => {
-    return [
-        { id: 'history', name: 'History', description: 'Exploring events and figures from the past.' },
-        { id: 'charities', name: 'Charities', description: 'Organizations making a positive difference.' },
-        { id: 'arabic-language', name: 'Arabic Language', description: 'Resources for learning Arabic.' },
-        { id: 'news', name: 'News', description: 'Latest updates from around the globe.' },
-        { id: 'science', name: 'Science', description: 'Delving into scientific discoveries.' },
-        { id: 'technology', name: 'Technology', description: 'Innovations and future trends.' },
-    ].sort((a, b) => a.name.localeCompare(b.name));
+    try {
+        const categories = await prisma.category.findMany({
+            orderBy: {
+                name: 'asc'
+            }
+        });
+        return categories;
+    } catch (error) {
+        console.error('Error fetching categories:', error);
+        return [];
+    }
 };
 
 const CategoryListItem: React.FC<{ category: Category }> = ({ category }) => {
@@ -32,7 +38,7 @@ const CategoryListItem: React.FC<{ category: Category }> = ({ category }) => {
                 </div>
             </div>
             <h2 className="text-xl font-bold text-black dark:text-white mb-2">{category.name}</h2>
-            <p className="text-black dark:text-white text-sm">{category.description}</p>
+            <p className="text-black dark:text-white text-sm">{category.description || 'No description available.'}</p>
         </Link>
     );
 };

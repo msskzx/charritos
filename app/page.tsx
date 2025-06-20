@@ -1,9 +1,11 @@
 import { FaListAlt } from "react-icons/fa";
+import NavBar from "../components/navbar";
 import Footer from "../components/footer";
 
 export default function Home() {
   return (
     <div className="flex flex-col min-h-screen bg-white dark:bg-black">
+      <NavBar />
       <main className="flex flex-1 flex-col items-center justify-center gap-8">
         <div className="flex flex-col items-center gap-2 mb-8">
           <h1 className="text-4xl font-extrabold text-center text-black dark:text-white tracking-tight drop-shadow-lg">
