@@ -1,6 +1,7 @@
 import { FaListAlt } from "react-icons/fa";
 import NavBar from "../components/navbar";
 import Footer from "../components/footer";
+import Link from "next/link";
 
 export default function Home() {
   return (
@@ -15,13 +16,15 @@ export default function Home() {
             Explore different charities, educators, and other helpful material.
           </p>
         </div>
-        <a
-          className="rounded-full border border-solid border-black dark:border-white transition-colors flex items-center justify-center bg-black dark:bg-white text-white dark:text-black gap-2 hover:bg-gray-800 dark:hover:bg-gray-200 font-medium text-lg h-14 px-8 shadow-lg"
-          href="/categories"
-        >
-          <FaListAlt className="w-6 h-6" />
-          Categories
-        </a>
+        <div className="flex justify-center w-full">
+          <Link
+            className="rounded-full border border-solid border-black dark:border-white transition-colors flex items-center justify-center bg-black dark:bg-white text-white dark:text-black gap-2 hover:bg-gray-800 dark:hover:bg-gray-200 font-medium text-lg h-14 px-8 shadow-lg"
+            href="/categories"
+          >
+            <FaListAlt className="w-6 h-6" />
+            Categories
+          </Link>
+        </div>
       </main>
       <Footer />
     </div>

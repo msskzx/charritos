@@ -23,9 +23,9 @@ interface Category {
 }
 
 interface PageProps {
-    params: {
+    params: Promise<{
         id: string;
-    };
+    }>;
 }
 
 const getCategoryWithProfiles = async (categoryId: string): Promise<Category | null> => {
@@ -84,7 +84,8 @@ const ProfileListItem: React.FC<{ profile: Profile }> = ({ profile }) => {
 
 // Main Category Page Component
 const CategoryPage = async ({ params }: PageProps) => {
-    const category = await getCategoryWithProfiles(params.id);
+    const { id } = await params;
+    const category = await getCategoryWithProfiles(id);
 
     if (!category) {
         notFound();

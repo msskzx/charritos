@@ -1,17 +1,21 @@
 import React from 'react';
-import Link from 'next/link';
 import NavBar from '../../components/navbar';
 import Footer from '../../components/footer';
 import { PrismaClient } from '@prisma/client';
 
 const prisma = new PrismaClient();
 
+interface Link {
+    name: string;
+    url: string;
+}
+
 interface Profile {
     id: string;
     name: string;
     description: string | null;
     imageUrl: string | null;
-    links: any;
+    links: Link[] | null;
     categories: {
         id: string;
         name: string;
@@ -33,7 +37,7 @@ const getProfiles = async (): Promise<Profile[]> => {
                 name: 'asc'
             }
         });
-        return profiles;
+        return profiles as Profile[];
     } catch (error) {
         console.error('Error fetching profiles:', error);
         return [];
@@ -66,9 +70,9 @@ const ProfileListItem: React.FC<{ profile: Profile }> = ({ profile }) => {
             </div>
 
             {/* Links */}
-            {profile.links && Array.isArray(profile.links) && profile.links.length > 0 && (
+            {profile.links && profile.links.length > 0 && (
                 <div className="flex flex-wrap justify-center gap-2">
-                    {profile.links.map((link: any, index: number) => (
+                    {profile.links.map((link: Link, index: number) => (
                         <a
                             key={index}
                             href={link.url}

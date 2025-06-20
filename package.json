@@ -6,7 +6,6 @@
     "dev": "next dev --turbopack",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint",
     "seed:categories": "tsx prisma/categories-seed.ts",
     "seed:profiles": "tsx prisma/profiles-seed.ts",
     "seed:all": "npm run seed:categories && npm run seed:profiles"
@@ -25,8 +24,6 @@
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
-    "eslint": "^9",
-    "eslint-config-next": "15.3.4",
     "prisma": "^6.10.1",
     "tailwindcss": "^4",
     "tsx": "^4.20.3",
