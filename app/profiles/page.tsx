@@ -1,4 +1,5 @@
 import React from 'react';
+import Link from 'next/link';
 import NavBar from '../../components/navbar';
 import Footer from '../../components/footer';
 import { PrismaClient } from '@prisma/client';
@@ -46,46 +47,45 @@ const getProfiles = async (): Promise<Profile[]> => {
 
 const ProfileListItem: React.FC<{ profile: Profile }> = ({ profile }) => {
     return (
-        <div className="block p-6 bg-white dark:bg-black rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300 border border-black dark:border-white">
-            <div className="flex flex-col items-center mb-4">
-                <div className="w-20 h-20 flex items-center justify-center rounded-full bg-black dark:bg-white text-white dark:text-black text-4xl font-bold mb-3">
-                    {profile.name.charAt(0)}
+        <Link href={`/profiles/${profile.id}`} className="block">
+            <div className="block p-6 bg-white dark:bg-black rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300 border border-black dark:border-white cursor-pointer">
+                <div className="flex flex-col items-center mb-4">
+                    <div className="w-20 h-20 flex items-center justify-center rounded-full bg-black dark:bg-white text-white dark:text-black text-4xl font-bold mb-3">
+                        {profile.name.charAt(0)}
+                    </div>
                 </div>
-            </div>
-            <h2 className="text-2xl font-bold text-black dark:text-white mb-2 text-center">{profile.name}</h2>
-            <p className="text-black dark:text-white text-sm mb-4 text-center">
-                {profile.description || 'No description available.'}
-            </p>
-            
-            {/* Categories */}
-            <div className="flex flex-wrap justify-center gap-2 mb-4">
-                {profile.categories.map((category) => (
-                    <span
-                        key={category.id}
-                        className="px-3 py-1 bg-black dark:bg-white text-white dark:text-black text-xs rounded-full font-medium"
-                    >
-                        {category.name}
-                    </span>
-                ))}
-            </div>
-
-            {/* Links */}
-            {profile.links && profile.links.length > 0 && (
-                <div className="flex flex-wrap justify-center gap-2">
-                    {profile.links.map((link: Link, index: number) => (
-                        <a
-                            key={index}
-                            href={link.url}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="px-4 py-2 bg-black dark:bg-white text-white dark:text-black text-sm rounded-md hover:bg-gray-800 dark:hover:bg-gray-200 transition-colors"
+                <h2 className="text-2xl font-bold text-black dark:text-white mb-2 text-center">{profile.name}</h2>
+                <p className="text-black dark:text-white text-sm mb-4 text-center">
+                    {profile.description || 'No description available.'}
+                </p>
+                
+                {/* Categories */}
+                <div className="flex flex-wrap justify-center gap-2 mb-4">
+                    {profile.categories.map((category) => (
+                        <span
+                            key={category.id}
+                            className="px-3 py-1 bg-black dark:bg-white text-white dark:text-black text-xs rounded-full font-medium"
                         >
-                            {link.name}
-                        </a>
+                            {category.name}
+                        </span>
                     ))}
                 </div>
-            )}
-        </div>
+
+                {/* Links */}
+                {profile.links && profile.links.length > 0 && (
+                    <div className="flex flex-wrap justify-center gap-2">
+                        {profile.links.map((link: Link, index: number) => (
+                            <span
+                                key={index}
+                                className="px-4 py-2 bg-black dark:bg-white text-white dark:text-black text-sm rounded-md"
+                            >
+                                {link.name}
+                            </span>
+                        ))}
+                    </div>
+                )}
+            </div>
+        </Link>
     );
 };
 
