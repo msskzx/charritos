@@ -94,9 +94,6 @@ const ProfileDetailPage = async ({ params }: PageProps) => {
                 {/* Categories */}
                 {profile.categories.length > 0 && (
                     <div className="mb-8">
-                        <h2 className="text-2xl font-bold text-black dark:text-white mb-4 text-center">
-                            Categories
-                        </h2>
                         <div className="flex flex-wrap justify-center gap-3">
                             {profile.categories.map((category) => (
                                 <Link
@@ -114,9 +111,6 @@ const ProfileDetailPage = async ({ params }: PageProps) => {
                 {/* Links */}
                 {profile.links && Array.isArray(profile.links) && profile.links.length > 0 && (
                     <div className="text-center">
-                        <h2 className="text-2xl font-bold text-black dark:text-white mb-6">
-                            Links
-                        </h2>
                         <div className="flex flex-wrap justify-center gap-4">
                             {profile.links.map((link: Link, index: number) => (
                                 <a
@@ -133,21 +127,6 @@ const ProfileDetailPage = async ({ params }: PageProps) => {
                     </div>
                 )}
 
-                {/* Navigation */}
-                <div className="mt-12 text-center">
-                    <Link 
-                        href="/profiles" 
-                        className="px-6 py-3 bg-black dark:bg-white text-white dark:text-black rounded-md hover:bg-gray-800 dark:hover:bg-gray-200 transition-colors mr-4"
-                    >
-                        View All Profiles
-                    </Link>
-                    <Link 
-                        href="/categories" 
-                        className="px-6 py-3 border border-black dark:border-white text-black dark:text-white rounded-md hover:bg-black hover:text-white dark:hover:bg-white dark:hover:text-black transition-colors"
-                    >
-                        Browse Categories
-                    </Link>
-                </div>
             </main>
 
             <Footer />

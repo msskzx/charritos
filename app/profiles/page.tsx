@@ -71,19 +71,6 @@ const ProfileListItem: React.FC<{ profile: Profile }> = ({ profile }) => {
                     ))}
                 </div>
 
-                {/* Links */}
-                {profile.links && profile.links.length > 0 && (
-                    <div className="flex flex-wrap justify-center gap-2">
-                        {profile.links.map((link: Link, index: number) => (
-                            <span
-                                key={index}
-                                className="px-4 py-2 bg-black dark:bg-white text-white dark:text-black text-sm rounded-md"
-                            >
-                                {link.name}
-                            </span>
-                        ))}
-                    </div>
-                )}
             </div>
         </Link>
     );

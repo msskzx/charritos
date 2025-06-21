@@ -1,4 +1,4 @@
-import { FaListAlt } from "react-icons/fa";
+import { FaIcons, FaUserTie } from "react-icons/fa";
 import NavBar from "../components/navbar";
 import Footer from "../components/footer";
 import Link from "next/link";
@@ -16,13 +16,20 @@ export default function Home() {
             Explore different charities, educators, and other helpful material.
           </p>
         </div>
-        <div className="flex justify-center w-full">
+        <div className="flex justify-center w-full gap-4">
           <Link
-            className="rounded-full border border-solid border-black dark:border-white transition-colors flex items-center justify-center bg-black dark:bg-white text-white dark:text-black gap-2 hover:bg-gray-800 dark:hover:bg-gray-200 font-medium text-lg h-14 px-8 shadow-lg"
+            className="rounded-full border border-solid border-black dark:border-white transition-colors flex items-center justify-center bg-black dark:bg-white text-white dark:text-black gap-2 hover:bg-gray-800 dark:hover:bg-gray-200 font-medium text-lg h-14 px-8 shadow-lg w-44"
             href="/categories"
           >
-            <FaListAlt className="w-6 h-6" />
+            <FaIcons className="w-6 h-6" />
             Categories
+          </Link>
+          <Link
+            className="rounded-full border border-solid border-black dark:border-white transition-colors flex items-center justify-center bg-black dark:bg-white text-white dark:text-black gap-2 hover:bg-gray-800 dark:hover:bg-gray-200 font-medium text-lg h-14 px-8 shadow-lg w-44"
+            href="/profiles"
+          >
+            <FaUserTie className="w-6 h-6" />
+            Profiles
           </Link>
         </div>
       </main>
