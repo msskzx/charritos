@@ -52,7 +52,7 @@ const getCategoryWithProfiles = async (categoryId: string): Promise<Category | n
 const ProfileListItem: React.FC<{ profile: Profile }> = ({ profile }) => {
     return (
         <Link href={`/profiles/${profile.id}`} className="block">
-            <div className="block p-6 bg-white dark:bg-black rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300 border border-black dark:border-white cursor-pointer">
+            <div className="block p-6 bg-white dark:bg-black rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300 transform hover:scale-105 ease-in-out border border-black dark:border-white cursor-pointer">
                 <div className="flex flex-col items-center mb-4">
                     <div className="w-20 h-20 flex items-center justify-center rounded-full bg-black dark:bg-white text-white dark:text-black text-4xl font-bold mb-3">
                         {profile.name.charAt(0)}
