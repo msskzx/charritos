@@ -1,26 +1,12 @@
 import React from 'react';
 import Link from 'next/link';
-import NavBar from '../../../components/navbar';
-import Footer from '../../../components/footer';
+import NavBar from '../../../components/NavBar';
+import Footer from '../../../components/Footer';
 import { PrismaClient } from '@prisma/client';
 import { notFound } from 'next/navigation';
+import { Profile, Category } from '../../../types';
 
 const prisma = new PrismaClient();
-
-interface Profile {
-    id: string;
-    name: string;
-    description: string | null;
-    imageUrl: string | null;
-    links: any;
-}
-
-interface Category {
-    id: string;
-    name: string;
-    description: string | null;
-    profiles: Profile[];
-}
 
 interface PageProps {
     params: Promise<{
@@ -28,21 +14,47 @@ interface PageProps {
     }>;
 }
 
-const getCategoryWithProfiles = async (categoryId: string): Promise<Category | null> => {
+const getCategoryWithProfiles = async (categoryId: string): Promise<{ category: Category; profiles: Profile[] } | null> => {
     try {
         const category = await prisma.category.findUnique({
             where: {
                 id: categoryId
-            },
-            include: {
-                profiles: {
-                    orderBy: {
-                        name: 'asc'
-                    }
-                }
             }
         });
-        return category;
+
+        if (!category) {
+            return null;
+        }
+
+        const profiles = await prisma.profile.findMany({
+            where: {
+                categories: {
+                    some: {
+                        id: categoryId
+                    }
+                }
+            },
+            include: {
+                categories: {
+                    select: {
+                        id: true,
+                        name: true
+                    }
+                }
+            },
+            orderBy: {
+                name: 'asc'
+            }
+        });
+
+        return {
+            category: {
+                id: category.id,
+                name: category.name,
+                description: category.description
+            },
+            profiles: profiles as Profile[]
+        };
     } catch (error) {
         console.error('Error fetching category:', error);
         return null;
@@ -95,14 +107,14 @@ const CategoryPage = async ({ params }: PageProps) => {
                 {/* Category Header */}
                 <div className="text-center mb-12">
                     <div className="w-24 h-24 flex items-center justify-center rounded-full bg-black dark:bg-white text-white dark:text-black text-5xl font-bold mx-auto mb-4">
-                        {category.name.charAt(0)}
+                        {category.category.name.charAt(0)}
                     </div>
                     <h1 className="text-4xl font-extrabold text-black dark:text-white mb-4 drop-shadow-lg">
-                        {category.name}
+                        {category.category.name}
                     </h1>
-                    {category.description && (
+                    {category.category.description && (
                         <p className="text-lg text-black dark:text-white max-w-2xl mx-auto">
-                            {category.description}
+                            {category.category.description}
                         </p>
                     )}
                 </div>

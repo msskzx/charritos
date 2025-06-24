@@ -1,28 +1,12 @@
 import React from 'react';
 import Link from 'next/link';
-import NavBar from '../../../components/navbar';
-import Footer from '../../../components/footer';
+import NavBar from '../../../components/NavBar';
+import Footer from '../../../components/Footer';
 import { PrismaClient } from '@prisma/client';
 import { notFound } from 'next/navigation';
+import { Profile, Link as LinkType } from '../../../types';
 
 const prisma = new PrismaClient();
-
-interface Link {
-    name: string;
-    url: string;
-}
-
-interface Profile {
-    id: string;
-    name: string;
-    description: string | null;
-    imageUrl: string | null;
-    links: any;
-    categories: {
-        id: string;
-        name: string;
-    }[];
-}
 
 interface PageProps {
     params: Promise<{
@@ -115,7 +99,7 @@ const ProfileDetailPage = async ({ params }: PageProps) => {
                 {profile.links && Array.isArray(profile.links) && profile.links.length > 0 && (
                     <div className="w-full flex justify-center">
                         <div className="flex flex-col gap-3 w-full max-w-3xl">
-                            {profile.links.map((link: Link, index: number) => (
+                            {profile.links.map((link: LinkType, index: number) => (
                                 <a
                                     key={index}
                                     href={link.url}

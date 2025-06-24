@@ -1,26 +1,16 @@
 import React from 'react';
 import Link from 'next/link';
-import NavBar from '../../components/navbar';
-import Footer from '../../components/footer';
+import NavBar from '../../components/NavBar';
+import Footer from '../../components/Footer';
 import { PrismaClient } from '@prisma/client';
+import ProfileCard from '../../components/ProfileCard';
+import { Profile } from '../../types';
 
 const prisma = new PrismaClient();
 
 interface Link {
     name: string;
     url: string;
-}
-
-interface Profile {
-    id: string;
-    name: string;
-    description: string | null;
-    imageUrl: string | null;
-    links: Link[] | null;
-    categories: {
-        id: string;
-        name: string;
-    }[];
 }
 
 const getProfiles = async (): Promise<Profile[]> => {
@@ -45,40 +35,6 @@ const getProfiles = async (): Promise<Profile[]> => {
     }
 };
 
-const ProfileListItem: React.FC<{ profile: Profile }> = ({ profile }) => {
-    return (
-        <Link href={`/profiles/${profile.id}`} className="block">
-            <div className="block p-6 bg-white dark:bg-black rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300 transform hover:scale-105 ease-in-out border border-black dark:border-white cursor-pointer">
-                <div className="flex flex-col items-center mb-4">
-                    <div className="w-20 h-20 flex items-center justify-center rounded-full bg-black dark:bg-white text-white dark:text-black text-4xl font-bold mb-3">
-                        {profile.name.split(' ').length >= 2 
-                            ? profile.name.split(' ').slice(0, 2).map(word => word.charAt(0)).join('').toUpperCase()
-                            : profile.name.charAt(0).toUpperCase()
-                        }
-                    </div>
-                </div>
-                <h2 className="text-2xl font-bold text-black dark:text-white mb-2 text-center">{profile.name}</h2>
-                <p className="text-black dark:text-white text-sm mb-4 text-center">
-                    {profile.description || 'No description available.'}
-                </p>
-                
-                {/* Categories */}
-                <div className="flex flex-wrap justify-center gap-2 mb-4">
-                    {profile.categories.map((category) => (
-                        <span
-                            key={category.id}
-                            className="px-3 py-1 bg-black dark:bg-white text-white dark:text-black text-xs rounded-full font-medium"
-                        >
-                            {category.name}
-                        </span>
-                    ))}
-                </div>
-
-            </div>
-        </Link>
-    );
-};
-
 // Main Profiles Page Component
 const ProfilesPage = async () => {
     const profiles: Profile[] = await getProfiles();
@@ -99,7 +55,17 @@ const ProfilesPage = async () => {
                 ) : (
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                         {profiles.map((profile) => (
-                            <ProfileListItem key={profile.id} profile={profile} />
+                             <Link href={`/profiles/${profile.id}`} key={profile.id} className="block">
+                                <div className="block p-6 bg-white dark:bg-black rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300 transform hover:scale-105 ease-in-out border border-black dark:border-white cursor-pointer h-full flex flex-col items-center">
+                                    <ProfileCard
+                                        profile={{
+                                            name: profile.name,
+                                            description: profile.description,
+                                            categories: profile.categories.map(c => c.name),
+                                        }}
+                                    />
+                                </div>
+                            </Link>
                         ))}
                     </div>
                 )}

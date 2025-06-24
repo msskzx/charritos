@@ -1,7 +1,7 @@
 import React from 'react';
-import Link from 'next/link'; // Import Link from next/link for client-side navigation
-import NavBar from '../../components/navbar';
-import Footer from '../../components/footer';
+import Link from 'next/link';
+import NavBar from '../../components/NavBar';
+import Footer from '../../components/Footer';
 import { PrismaClient } from '@prisma/client';
 
 const prisma = new PrismaClient();
