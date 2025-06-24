@@ -57,25 +57,23 @@ export const profiles = [
         { name: 'Website', url: 'https://www.sapienceinstitute.org' },
         { name: 'Donate', url: 'https://www.sapienceinstitute.org/donate' }
       ],
-      categoryNames: ['Islam']
+      categoryNames: ['Islam', 'Charities']
     },
     {
-      name: 'Quran',
-      description: 'The perserved word of Allah given to the Prophet Muhammad peace be upon him.',
+      name: 'Quran.com',
+      description: 'A website containing the perserved word of Allah given to the Prophet Muhammad peace be upon him.',
       imageUrl: null,
       links: [
         { name: 'Website', url: 'https://www.quran.com' },
-        { name: 'Donate', url: 'https://www.quran.com/donate' }
       ],
       categoryNames: ['Quran']
     },
     {
-      name: 'Hadith',
-      description: 'The sayings and actions of the Prophet Muhammad peace be upon him.',
+      name: 'Hadith.com',
+      description: 'A website containing the sayings and actions of the Prophet Muhammad peace be upon him.',
       imageUrl: null,
       links: [
         { name: 'Website', url: 'https://www.hadith.com' },
-        { name: 'Donate', url: 'https://www.hadith.com/donate' }
       ],
       categoryNames: ['Hadith']
     },

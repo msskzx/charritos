@@ -79,7 +79,10 @@ const ProfileDetailPage = async ({ params }: PageProps) => {
                 {/* Profile Header */}
                 <div className="text-center mb-12">
                     <div className="w-32 h-32 flex items-center justify-center rounded-full bg-black dark:bg-white text-white dark:text-black text-6xl font-bold mx-auto mb-6">
-                        {profile.name.charAt(0)}
+                        {profile.name.split(' ').length >= 2 
+                            ? profile.name.split(' ').slice(0, 2).map(word => word.charAt(0)).join('').toUpperCase()
+                            : profile.name.charAt(0).toUpperCase()
+                        }
                     </div>
                     <h1 className="text-5xl font-extrabold text-black dark:text-white mb-4 drop-shadow-lg">
                         {profile.name}
@@ -110,15 +113,15 @@ const ProfileDetailPage = async ({ params }: PageProps) => {
 
                 {/* Links */}
                 {profile.links && Array.isArray(profile.links) && profile.links.length > 0 && (
-                    <div className="text-center">
-                        <div className="flex flex-wrap justify-center gap-4">
+                    <div className="w-full flex justify-center">
+                        <div className="flex flex-col gap-3 w-full max-w-3xl">
                             {profile.links.map((link: Link, index: number) => (
                                 <a
                                     key={index}
                                     href={link.url}
                                     target="_blank"
                                     rel="noopener noreferrer"
-                                    className="px-6 py-3 bg-black dark:bg-white text-white dark:text-black text-lg rounded-md hover:bg-gray-800 dark:hover:bg-gray-200 transition-colors"
+                                    className="w-full px-6 py-4 bg-black dark:bg-white text-white dark:text-black text-lg rounded-md hover:bg-gray-800 dark:hover:bg-gray-200 transition-colors text-center"
                                 >
                                     {link.name}
                                 </a>
