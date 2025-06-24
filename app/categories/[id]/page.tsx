@@ -44,13 +44,11 @@ const CategoryPage = ({ params }: PageProps) => {
     const [category, setCategory] = useState<CategoryData | null>(null);
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
-    const [categoryName, setCategoryName] = useState<string>('');
 
     useEffect(() => {
         const fetchCategory = async () => {
             try {
                 const { id } = await params;
-                setCategoryName(id);
                 
                 const response = await fetch(`/api/categories/${encodeURIComponent(id)}`, {
                     method: 'GET',

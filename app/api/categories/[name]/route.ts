@@ -12,10 +12,11 @@ if (process.env.NODE_ENV !== 'production') globalForPrisma.prisma = prisma;
 
 export async function GET(
   request: Request,
-  { params }: { params: { name: string } }
+  { params }: { params: Promise<{ name: string }> }
 ) {
   try {
-    const categoryName = decodeURIComponent(params.name);
+    const { name } = await params;
+    const categoryName = decodeURIComponent(name);
 
     // Get the category with its profiles
     const category = await prisma.category.findUnique({
