@@ -1,87 +1,143 @@
+'use client';
+
+import { useState, useEffect } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 import NavBar from "../components/NavBar";
 import Footer from "../components/Footer";
-import ProfileCard from "../components/ProfileCard";
-import { FaRandom } from "react-icons/fa";
-import Link from "next/link";
-import { PrismaClient } from '@prisma/client';
+import RandomCharityButton from "../components/RandomCharityButton";
 import { Profile } from '../types';
 
-const prisma = new PrismaClient();
+export default function Home() {
+  const [charity, setCharity] = useState<Profile | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
-const getRandomCharity = async (): Promise<Profile | null> => {
-  try {
-    // Get all profiles that have the "Charities" category
-    const charityProfiles = await prisma.profile.findMany({
-      where: {
-        categories: {
-          some: {
-            name: "Charities"
-          }
+  // Fetch initial charity on component mount
+  useEffect(() => {
+    const fetchInitialCharity = async () => {
+      try {
+        const response = await fetch('/api/random-charity');
+        if (!response.ok) {
+          throw new Error('Failed to fetch initial charity');
         }
-      },
-      include: {
-        categories: {
-          select: {
-            id: true,
-            name: true
-          }
-        }
+        const data = await response.json();
+        setCharity(data);
+      } catch (error) {
+        console.error('Error fetching initial charity:', error);
+        setError('Failed to load charity data');
+      } finally {
+        setIsLoading(false);
       }
-    });
+    };
 
-    if (charityProfiles.length === 0) {
-      return null;
+    fetchInitialCharity();
+  }, []);
+
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        duration: 0.6,
+        staggerChildren: 0.2
+      }
     }
+  };
 
-    // Pick a random charity
-    const randomIndex = Math.floor(Math.random() * charityProfiles.length);
-    return charityProfiles[randomIndex];
-  } catch (error) {
-    console.error('Error fetching random charity:', error);
-    return null;
-  }
-};
+  const itemVariants = {
+    hidden: { opacity: 0, y: 20 },
+    visible: {
+      opacity: 1,
+      y: 0,
+      transition: {
+        duration: 0.5,
+        ease: "easeOut" as const
+      }
+    }
+  };
 
-export default async function Home() {
-  const randomCharity = await getRandomCharity();
+  const titleVariants = {
+    hidden: { opacity: 0, scale: 0.8 },
+    visible: {
+      opacity: 1,
+      scale: 1,
+      transition: {
+        duration: 0.7,
+        ease: "easeOut" as const
+      }
+    }
+  };
 
   return (
     <div className="flex flex-col min-h-screen bg-white dark:bg-black">
       <NavBar />
-      <main className="flex flex-1 flex-col items-center justify-center gap-8 p-4">
-        <div className="flex flex-col items-center gap-2 mb-4 text-center">
-          <h1 className="text-4xl font-extrabold text-black dark:text-white tracking-tight drop-shadow-lg">
-            Charritos
-          </h1>
-          <p className="text-lg text-black dark:text-white max-w-xl mt-2">
-            Explore different charities, educators, and other helpful material.
-          </p>
-        </div>
-
-        <div className="flex flex-col items-center gap-6 w-full max-w-md">
-          <Link 
-            href="/"
-            className="rounded-full border border-solid border-black dark:border-white transition-colors flex items-center justify-center bg-black dark:bg-white text-white dark:text-black gap-3 hover:bg-gray-800 dark:hover:bg-gray-200 font-medium text-lg h-14 px-8 shadow-lg w-auto"
+      <motion.main 
+        className="flex flex-1 flex-col items-center justify-center gap-8 p-4"
+        variants={containerVariants}
+        initial="hidden"
+        animate="visible"
+      >
+        <motion.div 
+          className="flex flex-col items-center gap-2 mb-4 text-center"
+          variants={itemVariants}
+        >
+          <motion.h1 
+            className="text-4xl font-extrabold text-black dark:text-white tracking-tight drop-shadow-lg"
+            variants={titleVariants}
           >
-            <FaRandom className="w-6 h-6" />
-            Pick a Random Charity
-          </Link>
+            Charritos
+          </motion.h1>
+          <motion.p 
+            className="text-lg text-black dark:text-white max-w-xl mt-2"
+            variants={itemVariants}
+          >
+            Explore different charities, educators, and other helpful material.
+          </motion.p>
+        </motion.div>
 
-          {randomCharity && (
-            <Link href={`/profiles/${randomCharity.id}`} className="block">
-              <div className="block p-6 bg-white dark:bg-black rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300 transform hover:scale-105 ease-in-out border border-black dark:border-white cursor-pointer h-full flex flex-col items-center">
-                <ProfileCard
-                  profile={{
-                    name: randomCharity.name,
-                    description: randomCharity.description,
-                    categories: randomCharity.categories.map(c => c.name),
-                  }}
-                />
+        <AnimatePresence mode="wait">
+          {isLoading ? (
+            <motion.div
+              key="loading"
+              initial={{ opacity: 0, scale: 0.9 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.9 }}
+              transition={{ duration: 0.3 }}
+              className="flex flex-col items-center gap-6 w-full max-w-md"
+            >
+              <div className="animate-pulse">
+                <div className="h-14 w-48 bg-gray-300 dark:bg-gray-700 rounded-full"></div>
               </div>
-            </Link>
+              <div className="animate-pulse">
+                <div className="h-32 w-full bg-gray-300 dark:bg-gray-700 rounded-lg"></div>
+              </div>
+            </motion.div>
+          ) : error ? (
+            <motion.div
+              key="error"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -20 }}
+              transition={{ duration: 0.3 }}
+              className="block p-6 bg-red-50 dark:bg-red-900/20 rounded-lg border border-red-200 dark:border-red-800"
+            >
+              <p className="text-red-600 dark:text-red-400 text-center">
+                {error}
+              </p>
+            </motion.div>
+          ) : (
+            <motion.div
+              key="content"
+              initial={{ opacity: 0, scale: 0.9 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.9 }}
+              transition={{ duration: 0.5, ease: "easeOut" }}
+            >
+              <RandomCharityButton initialCharity={charity} />
+            </motion.div>
           )}
-        </div>
-      </main>
+        </AnimatePresence>
+      </motion.main>
       <Footer />
     </div>
   );

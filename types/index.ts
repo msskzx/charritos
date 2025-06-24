@@ -16,6 +16,12 @@ export interface Category {
   description: string | null;
 }
 
+export interface CategoryForCard {
+  name: string;
+  description: string | null;
+  profileCount?: number;
+}
+
 export interface Link {
   name: string;
   url: string;

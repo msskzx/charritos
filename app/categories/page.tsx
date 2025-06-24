@@ -1,51 +1,55 @@
-import React from 'react';
+'use client';
+
+import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import NavBar from '../../components/NavBar';
 import Footer from '../../components/Footer';
-import { PrismaClient } from '@prisma/client';
+import CategoryCard from '../../components/CategoryCard';
+import { CategoryForCard } from '../../types';
 
-const prisma = new PrismaClient();
-
-interface Category {
-    id: string;
-    name: string;
-    description: string | null;
-}
-
-const getCategories = async (): Promise<Category[]> => {
-    try {
-        const categories = await prisma.category.findMany({
-            orderBy: {
-                name: 'asc'
-            }
-        });
-        return categories;
-    } catch (error) {
-        console.error('Error fetching categories:', error);
-        return [];
-    }
-};
-
-const CategoryListItem: React.FC<{ category: Category }> = ({ category }) => {
+const CategoryListItem: React.FC<{ category: CategoryForCard }> = ({ category }) => {
     return (
         <Link
-            href={`/categories/${category.id}`}
-            className="block p-4 bg-white dark:bg-black rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300 transform hover:scale-105 ease-in-out text-center border border-black dark:border-white"
+            href={`/categories/${category.name}`}
+            className="block p-6 bg-white dark:bg-black rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300 transform hover:scale-105 ease-in-out border border-black dark:border-white"
         >
-            <div className="flex flex-col items-center mb-2">
-                <div className="w-16 h-16 flex items-center justify-center rounded-full bg-black dark:bg-white text-white dark:text-black text-3xl font-bold mb-2">
-                    {category.name.charAt(0)}
-                </div>
-            </div>
-            <h2 className="text-xl font-bold text-black dark:text-white mb-2">{category.name}</h2>
-            <p className="text-black dark:text-white text-sm">{category.description || 'No description available.'}</p>
+            <CategoryCard category={category} />
         </Link>
     );
 };
 
 // Main Categories Page Component
-const CategoriesPage = async () => {
-    const categories: Category[] = await getCategories(); // Data fetching happens on the server
+const CategoriesPage = () => {
+    const [categories, setCategories] = useState<CategoryForCard[]>([]);
+    const [isLoading, setIsLoading] = useState(true);
+    const [error, setError] = useState<string | null>(null);
+
+    useEffect(() => {
+        const fetchCategories = async () => {
+            try {
+                const response = await fetch('/api/categories', {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                });
+
+                if (!response.ok) {
+                    throw new Error('Failed to fetch categories');
+                }
+
+                const data = await response.json();
+                setCategories(data);
+            } catch (error) {
+                console.error('Error fetching categories:', error);
+                setError('Failed to load categories');
+            } finally {
+                setIsLoading(false);
+            }
+        };
+
+        fetchCategories();
+    }, []);
 
     return (
         <div className="min-h-screen flex flex-col items-center bg-white dark:bg-black text-black dark:text-white font-inter">
@@ -56,14 +60,22 @@ const CategoriesPage = async () => {
                     All Categories
                 </h1>
 
-                {categories.length === 0 ? (
+                {isLoading ? (
+                    <div className="flex justify-center items-center">
+                        <p className="text-black dark:text-white text-lg">Loading categories...</p>
+                    </div>
+                ) : error ? (
+                    <p className="text-center text-red-600 dark:text-red-400 text-lg my-8">
+                        {error}
+                    </p>
+                ) : categories.length === 0 ? (
                     <p className="text-center text-black dark:text-white text-lg my-8">
                         No categories found.
                     </p>
                 ) : (
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                         {categories.map((category) => (
-                            <CategoryListItem key={category.id} category={category} />
+                            <CategoryListItem key={category.name} category={category} />
                         ))}
                     </div>
                 )}
