@@ -5,17 +5,7 @@ import Link from 'next/link';
 import NavBar from '../../../components/NavBar';
 import Footer from '../../../components/Footer';
 import ProfileCard from '../../../components/ProfileCard';
-import { Profile } from '../../../types';
-
-interface CategoryData {
-    id: string;
-    name: string;
-    description: string | null;
-    imageUrl: string | null;
-    createdAt: string;
-    profileCount: number;
-    profiles: Profile[];
-}
+import { Category, Profile } from '../../../types';
 
 interface PageProps {
     params: Promise<{
@@ -29,9 +19,12 @@ const ProfileListItem: React.FC<{ profile: Profile }> = ({ profile }) => {
             <div className="block p-6 bg-white dark:bg-black rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300 transform hover:scale-105 ease-in-out border border-black dark:border-white cursor-pointer">
                 <ProfileCard
                     profile={{
+                        id: profile.id,
                         name: profile.name,
                         description: profile.description,
-                        categories: profile.categories.map(c => c.name),
+                        categories: profile.categories.map(c => ({ id: c.id, name: c.name })),
+                        imageUrl: profile.imageUrl,
+                        links: profile.links,
                     }}
                 />
             </div>
@@ -41,7 +34,7 @@ const ProfileListItem: React.FC<{ profile: Profile }> = ({ profile }) => {
 
 // Main Category Page Component
 const CategoryPage = ({ params }: PageProps) => {
-    const [category, setCategory] = useState<CategoryData | null>(null);
+    const [category, setCategory] = useState<Category | null>(null);
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
 
@@ -153,7 +146,7 @@ const CategoryPage = ({ params }: PageProps) => {
                 </div>
 
                 {/* Profiles Grid */}
-                {category.profiles.length === 0 ? (
+                {category.profileCount === 0 ? (
                     <div className="text-center">
                         <p className="text-black dark:text-white text-lg my-8">
                             No profiles found in this category.
@@ -167,7 +160,7 @@ const CategoryPage = ({ params }: PageProps) => {
                     </div>
                 ) : (
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                        {category.profiles.map((profile) => (
+                        {category.profiles?.map((profile) => (
                             <ProfileListItem key={profile.id} profile={profile} />
                         ))}
                     </div>

@@ -3,7 +3,6 @@
 import { useState } from 'react';
 import { FaRandom, FaSpinner } from "react-icons/fa";
 import { motion, AnimatePresence } from 'framer-motion';
-import Link from "next/link";
 import ProfileCard from "./ProfileCard";
 import { Profile } from '../types';
 
@@ -112,21 +111,21 @@ export default function RandomCharityButton({ initialCharity }: RandomCharityBut
             exit="exit"
             className="block"
           >
-            <Link href={`/profiles/${charity.id}`} className="block">
               <motion.div 
-                className="block p-6 bg-white dark:bg-black rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300 transform hover:scale-105 ease-in-out border border-black dark:border-white cursor-pointer h-full flex flex-col items-center"
                 whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 0.98 }}
               >
                 <ProfileCard
                   profile={{
+                    id: charity.id,
                     name: charity.name,
                     description: charity.description,
-                    categories: charity.categories.map(c => c.name),
+                    categories: charity.categories.map(c => ({ id: c.id, name: c.name })),
+                    imageUrl: charity.imageUrl,
+                    links: charity.links,
                   }}
                 />
               </motion.div>
-            </Link>
           </motion.div>
         )}
 

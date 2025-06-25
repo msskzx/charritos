@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 import { PrismaClient } from '@prisma/client';
-import { CategoryForCard } from '../../../types';
+import { Category } from '../../../types';
 
 // Use a singleton pattern for PrismaClient
 const globalForPrisma = globalThis as unknown as {
@@ -11,7 +11,7 @@ const prisma = globalForPrisma.prisma ?? new PrismaClient();
 
 if (process.env.NODE_ENV !== 'production') globalForPrisma.prisma = prisma;
 
-const getCategories = async (): Promise<CategoryForCard[]> => {
+const getCategories = async (): Promise<Category[]> => {
   try {
     const categories = await prisma.category.findMany({
       include: {
@@ -27,6 +27,7 @@ const getCategories = async (): Promise<CategoryForCard[]> => {
     });
 
     return categories.map(category => ({
+      id: category.id,
       name: category.name,
       description: category.description,
       profileCount: category._count.profiles

@@ -15,6 +15,7 @@ export interface Category {
   name: string;
   description: string | null;
   profileCount?: number;
+  profiles?: Profile[];
 }
 
 export interface Link {
