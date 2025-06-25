@@ -105,11 +105,8 @@ export default function Home() {
               transition={{ duration: 0.3 }}
               className="flex flex-col items-center gap-6 w-full max-w-md"
             >
-              <div className="animate-pulse">
-                <div className="h-14 w-48 bg-gray-300 dark:bg-gray-700 rounded-full"></div>
-              </div>
-              <div className="animate-pulse">
-                <div className="h-32 w-full bg-gray-300 dark:bg-gray-700 rounded-lg"></div>
+              <div className="flex justify-center items-center">
+                <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-gray-900 dark:border-white"></div>
               </div>
             </motion.div>
           ) : error ? (
