@@ -1,26 +1,13 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import Link from 'next/link';
 import NavBar from '../../components/NavBar';
 import Footer from '../../components/Footer';
 import CategoryCard from '../../components/CategoryCard';
-import { CategoryForCard } from '../../types';
+import { Category } from '../../types';
 
-const CategoryListItem: React.FC<{ category: CategoryForCard }> = ({ category }) => {
-    return (
-        <Link
-            href={`/categories/${category.name}`}
-            className="block p-6 bg-white dark:bg-black rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300 transform hover:scale-105 ease-in-out border border-black dark:border-white"
-        >
-            <CategoryCard category={category} />
-        </Link>
-    );
-};
-
-// Main Categories Page Component
 const CategoriesPage = () => {
-    const [categories, setCategories] = useState<CategoryForCard[]>([]);
+    const [categories, setCategories] = useState<Category[]>([]);
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
 
@@ -62,7 +49,7 @@ const CategoriesPage = () => {
 
                 {isLoading ? (
                     <div className="flex justify-center items-center">
-                        <p className="text-black dark:text-white text-lg">Loading categories...</p>
+                        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-gray-900 dark:border-white"></div>
                     </div>
                 ) : error ? (
                     <p className="text-center text-red-600 dark:text-red-400 text-lg my-8">
@@ -75,7 +62,7 @@ const CategoriesPage = () => {
                 ) : (
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                         {categories.map((category) => (
-                            <CategoryListItem key={category.name} category={category} />
+                            <CategoryCard key={category.name} category={category} />
                         ))}
                     </div>
                 )}

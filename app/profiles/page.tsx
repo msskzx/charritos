@@ -1,5 +1,6 @@
-import React from 'react';
-import Link from 'next/link';
+'use client';
+
+import React, { useEffect, useState } from 'react';
 import NavBar from '../../components/NavBar';
 import Footer from '../../components/Footer';
 import { PrismaClient } from '@prisma/client';
@@ -7,11 +8,6 @@ import ProfileCard from '../../components/ProfileCard';
 import { Profile } from '../../types';
 
 const prisma = new PrismaClient();
-
-interface Link {
-    name: string;
-    url: string;
-}
 
 const getProfiles = async (): Promise<Profile[]> => {
     try {
@@ -35,9 +31,37 @@ const getProfiles = async (): Promise<Profile[]> => {
     }
 };
 
-// Main Profiles Page Component
-const ProfilesPage = async () => {
-    const profiles: Profile[] = await getProfiles();
+const ProfilesPage = () => {
+    const [profiles, setProfiles] = useState<Profile[]>([]);
+    const [isLoading, setIsLoading] = useState(true);
+    const [error, setError] = useState<string | null>(null);
+
+    useEffect(() => {
+        const fetchProfiles = async () => {
+            try {
+                const response = await fetch('/api/profiles', {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                });
+
+                if (!response.ok) {
+                    throw new Error('Failed to fetch profiles');
+                }
+
+                const data = await response.json();
+                setProfiles(data);
+            } catch (error) {
+                console.error('Error fetching profiles:', error);
+                setError('Failed to load profiles');
+            } finally {
+                setIsLoading(false);
+            }
+        };
+
+        fetchProfiles();
+    }, []);
 
     return (
         <div className="min-h-screen flex flex-col items-center bg-white dark:bg-black text-black dark:text-white font-inter">
@@ -48,24 +72,22 @@ const ProfilesPage = async () => {
                     All Profiles
                 </h1>
 
-                {profiles.length === 0 ? (
+                {isLoading ? (
+                    <div className="flex justify-center items-center">
+                        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-gray-900 dark:border-white"></div>
+                    </div>
+                ) : error ? (
+                    <p className="text-center text-red-600 dark:text-red-400 text-lg my-8">
+                        {error}
+                    </p>
+                ) : profiles.length === 0 ? (
                     <p className="text-center text-black dark:text-white text-lg my-8">
                         No profiles found.
                     </p>
                 ) : (
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                         {profiles.map((profile) => (
-                             <Link href={`/profiles/${profile.id}`} key={profile.id} className="block">
-                                <div className="block p-6 bg-white dark:bg-black rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300 transform hover:scale-105 ease-in-out border border-black dark:border-white cursor-pointer h-full flex flex-col items-center">
-                                    <ProfileCard
-                                        profile={{
-                                            name: profile.name,
-                                            description: profile.description,
-                                            categories: profile.categories.map(c => c.name),
-                                        }}
-                                    />
-                                </div>
-                            </Link>
+                            <ProfileCard key={profile.id} profile={profile} />
                         ))}
                     </div>
                 )}

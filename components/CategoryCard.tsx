@@ -1,13 +1,13 @@
 import React from 'react';
-import { CategoryForCard } from '../types';
+import Link from 'next/link';
+import { Category } from '../types';
 
-interface CategoryCardProps {
-    category: CategoryForCard;
-}
-
-const CategoryCard: React.FC<CategoryCardProps> = ({ category }) => {
+const CategoryCard: React.FC<{category: Category}> = ({ category }) => {
     return (
-        <>
+        <Link
+            href={`/categories/${category.name}`}
+            className="block p-6 bg-white dark:bg-black rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300 transform hover:scale-105 ease-in-out border border-black dark:border-white"
+        >
             <div className="flex flex-col items-center mb-4">
                 <div className="w-20 h-20 flex items-center justify-center rounded-full bg-black dark:bg-white text-white dark:text-black text-4xl font-bold mb-3">
                     {category.name.split(' ').length >= 2
@@ -28,7 +28,7 @@ const CategoryCard: React.FC<CategoryCardProps> = ({ category }) => {
                     </span>
                 </div>
             )}
-        </>
+        </Link>
     );
 };
 

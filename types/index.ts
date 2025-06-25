@@ -14,11 +14,6 @@ export interface Category {
   id: string;
   name: string;
   description: string | null;
-}
-
-export interface CategoryForCard {
-  name: string;
-  description: string | null;
   profileCount?: number;
 }
 
