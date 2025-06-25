@@ -5,32 +5,13 @@ import Link from 'next/link';
 import NavBar from '../../../components/NavBar';
 import Footer from '../../../components/Footer';
 import ProfileCard from '../../../components/ProfileCard';
-import { Category, Profile } from '../../../types';
+import { Category } from '../../../types';
 
 interface PageProps {
     params: Promise<{
         id: string;
     }>;
 }
-
-const ProfileListItem: React.FC<{ profile: Profile }> = ({ profile }) => {
-    return (
-        <Link href={`/profiles/${profile.id}`} className="block">
-            <div className="block p-6 bg-white dark:bg-black rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300 transform hover:scale-105 ease-in-out border border-black dark:border-white cursor-pointer">
-                <ProfileCard
-                    profile={{
-                        id: profile.id,
-                        name: profile.name,
-                        description: profile.description,
-                        categories: profile.categories.map(c => ({ id: c.id, name: c.name })),
-                        imageUrl: profile.imageUrl,
-                        links: profile.links,
-                    }}
-                />
-            </div>
-        </Link>
-    );
-};
 
 // Main Category Page Component
 const CategoryPage = ({ params }: PageProps) => {
@@ -161,7 +142,7 @@ const CategoryPage = ({ params }: PageProps) => {
                 ) : (
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                         {category.profiles?.map((profile) => (
-                            <ProfileListItem key={profile.id} profile={profile} />
+                            <ProfileCard key={profile.id} profile={profile} />
                         ))}
                     </div>
                 )}

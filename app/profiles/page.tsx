@@ -3,33 +3,8 @@
 import React, { useEffect, useState } from 'react';
 import NavBar from '../../components/NavBar';
 import Footer from '../../components/Footer';
-import { PrismaClient } from '@prisma/client';
 import ProfileCard from '../../components/ProfileCard';
 import { Profile } from '../../types';
-
-const prisma = new PrismaClient();
-
-const getProfiles = async (): Promise<Profile[]> => {
-    try {
-        const profiles = await prisma.profile.findMany({
-            include: {
-                categories: {
-                    select: {
-                        id: true,
-                        name: true
-                    }
-                }
-            },
-            orderBy: {
-                name: 'asc'
-            }
-        });
-        return profiles as Profile[];
-    } catch (error) {
-        console.error('Error fetching profiles:', error);
-        return [];
-    }
-};
 
 const ProfilesPage = () => {
     const [profiles, setProfiles] = useState<Profile[]>([]);

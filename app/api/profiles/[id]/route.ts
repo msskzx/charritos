@@ -1,6 +1,5 @@
 import { NextResponse } from 'next/server';
 import { PrismaClient } from '@prisma/client';
-import { Profile } from '../../../../types';
 
 // Use a singleton pattern for PrismaClient
 const globalForPrisma = globalThis as unknown as {
