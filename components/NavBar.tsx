@@ -11,6 +11,7 @@ const NavBar: React.FC = () => {
                 <div className="flex space-x-6">
                     <Link href="/categories" className="text-white rounded-md transition-colors hover:bg-gray-100 hover:bg-gray-800 text-gray-700 dark:text-gray-200 font-medium px-2 py-1">Categories</Link>
                     <Link href="/profiles" className="text-white rounded-md transition-colors hover:bg-gray-100 hover:bg-gray-800 text-gray-700 dark:text-gray-200 font-medium px-2 py-1">Profiles</Link>
+                    <Link href="/qibla" className="text-white rounded-md transition-colors hover:bg-gray-100 hover:bg-gray-800 text-gray-700 dark:text-gray-200 font-medium px-2 py-1">Qibla</Link>
                 </div>
             </div>
         </nav>
