@@ -53,28 +53,14 @@ const CategoryPage = ({ params }: PageProps) => {
         fetchCategory();
     }, [params]);
 
-    if (isLoading) {
-        return (
-            <div className="min-h-screen flex flex-col items-center bg-white dark:bg-black text-black dark:text-white font-inter">
-                <NavBar />
-                <main className="flex-grow container mx-auto p-8">
-                    <div className="flex justify-center items-center">
-                        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-gray-900 dark:border-white"></div>
-                    </div>
-                </main>
-                <Footer />
-            </div>
-        );
-    }
-
-    if (error || !category) {
+    if (error) {
         return (
             <div className="min-h-screen flex flex-col items-center bg-white dark:bg-black text-black dark:text-white font-inter">
                 <NavBar />
                 <main className="flex-grow container mx-auto p-8">
                     <div className="text-center">
                         <p className="text-red-600 dark:text-red-400 text-lg my-8">
-                            {error || 'Category not found'}
+                            {error}
                         </p>
                         <Link 
                             href="/categories" 
@@ -82,6 +68,20 @@ const CategoryPage = ({ params }: PageProps) => {
                         >
                             Back to Categories
                         </Link>
+                    </div>
+                </main>
+                <Footer />
+            </div>
+        );
+    }
+
+    if (isLoading && !category) {
+        return (
+            <div className="min-h-screen flex flex-col items-center bg-white dark:bg-black text-black dark:text-white font-inter">
+                <NavBar />
+                <main className="flex-grow container mx-auto p-8">
+                    <div className="flex justify-center items-center">
+                        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-gray-900 dark:border-white"></div>
                     </div>
                 </main>
                 <Footer />
@@ -105,29 +105,41 @@ const CategoryPage = ({ params }: PageProps) => {
                 </div>
 
                 {/* Category Header */}
-                <div className="text-center mb-12">
-                    <div className="w-24 h-24 flex items-center justify-center rounded-full bg-black dark:bg-white text-white dark:text-black text-5xl font-bold mx-auto mb-4">
-                        {category.name.charAt(0)}
+                {category && (
+                    <div className="text-center mb-12">
+                        <div className="w-24 h-24 flex items-center justify-center rounded-full bg-black dark:bg-white text-white dark:text-black text-5xl font-bold mx-auto mb-4">
+                            {category.name.charAt(0)}
+                        </div>
+                        <h1 className="text-4xl font-extrabold text-black dark:text-white mb-4 drop-shadow-lg">
+                            {category.name}
+                        </h1>
+                        {category.description && (
+                            <p className="text-lg text-black dark:text-white max-w-2xl mx-auto">
+                                {category.description}
+                            </p>
+                        )}
                     </div>
-                    <h1 className="text-4xl font-extrabold text-black dark:text-white mb-4 drop-shadow-lg">
-                        {category.name}
-                    </h1>
-                    {category.description && (
-                        <p className="text-lg text-black dark:text-white max-w-2xl mx-auto">
-                            {category.description}
-                        </p>
-                    )}
-                </div>
+                )}
 
                 {/* Profiles Count */}
-                <div className="text-center mb-8">
-                    <p className="text-black dark:text-white text-lg">
-                        {category.profileCount} profile{category.profileCount !== 1 ? 's' : ''} found
-                    </p>
-                </div>
+                {category && (
+                    <div className="text-center mb-8">
+                        <p className="text-black dark:text-white text-lg">
+                            {category.profileCount} profile{category.profileCount !== 1 ? 's' : ''} found
+                        </p>
+                    </div>
+                )}
+
+                {/* Loading State for Profiles */}
+                {isLoading && category && (
+                    <div className="text-center">
+                        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-gray-900 dark:border-white mx-auto mb-4"></div>
+                        <p className="text-black dark:text-white text-lg">Loading profiles...</p>
+                    </div>
+                )}
 
                 {/* Profiles Grid */}
-                {category.profileCount === 0 ? (
+                {!isLoading && category && category.profileCount === 0 ? (
                     <div className="text-center">
                         <p className="text-black dark:text-white text-lg my-8">
                             No profiles found in this category.
@@ -139,7 +151,7 @@ const CategoryPage = ({ params }: PageProps) => {
                             View All Profiles
                         </Link>
                     </div>
-                ) : (
+                ) : !isLoading && category && (
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                         {category.profiles?.map((profile) => (
                             <ProfileCard key={profile.id} profile={profile} />

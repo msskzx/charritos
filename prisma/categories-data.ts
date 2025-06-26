@@ -39,4 +39,24 @@ export const categories = [
     name: 'Mosques',
     description: 'Mosques around the world.',
   },
-]
+  {
+    name: 'Coding',
+    description: 'Coding platforms and courses.'
+  },
+  {
+    name: 'Education',
+    description: 'Resources for learning and personal development.'
+  },
+  {
+    name: 'Books',
+    description: 'Discover a wide range of books across different genres and topics.'
+  },
+  {
+    name: 'Languages',
+    description: 'Resources for learning various languages.'
+  },
+  {
+    name: 'Medicine',
+    description: 'Healthcare resources and medical information.'
+  }
+] 

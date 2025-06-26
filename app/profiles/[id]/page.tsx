@@ -1,12 +1,10 @@
-import React from 'react';
+'use client';
+
+import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import NavBar from '../../../components/NavBar';
 import Footer from '../../../components/Footer';
-import { PrismaClient } from '@prisma/client';
-import { notFound } from 'next/navigation';
 import { Profile, Link as LinkType } from '../../../types';
-
-const prisma = new PrismaClient();
 
 interface PageProps {
     params: Promise<{
@@ -14,35 +12,80 @@ interface PageProps {
     }>;
 }
 
-const getProfile = async (profileId: string): Promise<Profile | null> => {
-    try {
-        const profile = await prisma.profile.findUnique({
-            where: {
-                id: profileId
-            },
-            include: {
-                categories: {
-                    select: {
-                        id: true,
-                        name: true
-                    }
-                }
-            }
-        });
-        return profile as Profile;
-    } catch (error) {
-        console.error('Error fetching profile:', error);
-        return null;
-    }
-};
-
 // Main Profile Detail Page Component
-const ProfileDetailPage = async ({ params }: PageProps) => {
-    const { id } = await params;
-    const profile = await getProfile(id);
+const ProfileDetailPage = ({ params }: PageProps) => {
+    const [profile, setProfile] = useState<Profile | null>(null);
+    const [isLoading, setIsLoading] = useState(true);
+    const [error, setError] = useState<string | null>(null);
 
-    if (!profile) {
-        notFound();
+    useEffect(() => {
+        const fetchProfile = async () => {
+            try {
+                const { id } = await params;
+                
+                const response = await fetch(`/api/profiles/${encodeURIComponent(id)}`, {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                });
+
+                if (!response.ok) {
+                    if (response.status === 404) {
+                        setError('Profile not found');
+                    } else {
+                        throw new Error('Failed to fetch profile');
+                    }
+                    return;
+                }
+
+                const data = await response.json();
+                setProfile(data);
+            } catch (error) {
+                console.error('Error fetching profile:', error);
+                setError('Failed to load profile data');
+            } finally {
+                setIsLoading(false);
+            }
+        };
+
+        fetchProfile();
+    }, [params]);
+
+    if (isLoading) {
+        return (
+            <div className="min-h-screen flex flex-col items-center bg-white dark:bg-black text-black dark:text-white font-inter">
+                <NavBar />
+                <main className="flex-grow container mx-auto p-8">
+                    <div className="flex justify-center items-center">
+                        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-gray-900 dark:border-white"></div>
+                    </div>
+                </main>
+                <Footer />
+            </div>
+        );
+    }
+
+    if (error || !profile) {
+        return (
+            <div className="min-h-screen flex flex-col items-center bg-white dark:bg-black text-black dark:text-white font-inter">
+                <NavBar />
+                <main className="flex-grow container mx-auto p-8">
+                    <div className="text-center">
+                        <p className="text-red-600 dark:text-red-400 text-lg my-8">
+                            {error || 'Profile not found'}
+                        </p>
+                        <Link 
+                            href="/profiles" 
+                            className="px-6 py-3 bg-black dark:bg-white text-white dark:text-black rounded-md hover:bg-gray-800 dark:hover:bg-gray-200 transition-colors"
+                        >
+                            Back to All Profiles
+                        </Link>
+                    </div>
+                </main>
+                <Footer />
+            </div>
+        );
     }
 
     return (
@@ -79,7 +122,7 @@ const ProfileDetailPage = async ({ params }: PageProps) => {
                 </div>
 
                 {/* Categories */}
-                {profile.categories.length > 0 && (
+                {profile.categories && profile.categories.length > 0 && (
                     <div className="mb-8">
                         <div className="flex flex-wrap justify-center gap-3">
                             {profile.categories.map((category) => (
