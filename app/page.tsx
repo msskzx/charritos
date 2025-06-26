@@ -4,33 +4,82 @@ import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import NavBar from "../components/NavBar";
 import Footer from "../components/Footer";
-import RandomCharityButton from "../components/RandomCharityButton";
+import RandomProfileButton from "../components/RandomProfileButton";
+import CategoryCard from "../components/CategoryCard";
 import { Profile } from '../types';
 
 export default function Home() {
   const [charity, setCharity] = useState<Profile | null>(null);
+  const [mosque, setMosque] = useState<Profile | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [charityCount, setCharityCount] = useState<number>(0);
+  const [mosqueCount, setMosqueCount] = useState<number>(0);
 
-  // Fetch initial charity on component mount
+  // Category data for the cards
+  const charitiesCategory = {
+    id: 'charities',
+    name: 'Charities',
+    description: 'Organizations making a positive difference.',
+    profileCount: charityCount
+  };
+
+  const mosquesCategory = {
+    id: 'mosques',
+    name: 'Mosques',
+    description: 'Mosques around the world.',
+    profileCount: mosqueCount
+  };
+
+  // Fetch initial charity and mosque on component mount
   useEffect(() => {
-    const fetchInitialCharity = async () => {
+    const fetchInitialData = async () => {
       try {
-        const response = await fetch('/api/random-charity');
-        if (!response.ok) {
-          throw new Error('Failed to fetch initial charity');
+        // Fetch categories to get profile counts
+        const categoriesResponse = await fetch('/api/categories');
+        if (categoriesResponse.ok) {
+          const categoriesData = await categoriesResponse.json();
+          const charitiesCategory = categoriesData.find((cat: any) => cat.name === 'Charities');
+          const mosquesCategory = categoriesData.find((cat: any) => cat.name === 'Mosques');
+          
+          if (charitiesCategory) {
+            setCharityCount(charitiesCategory.profileCount);
+          }
+          if (mosquesCategory) {
+            setMosqueCount(mosquesCategory.profileCount);
+          }
         }
-        const data = await response.json();
-        setCharity(data);
+
+        // Fetch initial charity
+        const charityResponse = await fetch('/api/random-profile?category=Charities');
+        if (charityResponse.ok) {
+          const charityData = await charityResponse.json();
+          setCharity(charityData);
+        }
+
+        // Fetch initial mosque
+        const mosqueResponse = await fetch('/api/random-profile?category=Mosques');
+        if (mosqueResponse.ok) {
+          const mosqueData = await mosqueResponse.json();
+          setMosque(mosqueData);
+        }
       } catch (error) {
-        console.error('Error fetching initial charity:', error);
-        setError('Failed to load charity data');
+        console.error('Error fetching initial data:', error);
+        setError('Failed to load data');
       } finally {
         setIsLoading(false);
       }
     };
 
-    fetchInitialCharity();
+    // Add a timeout to prevent infinite loading
+    const timeoutId = setTimeout(() => {
+      setIsLoading(false);
+    }, 5000); // 5 second timeout
+
+    fetchInitialData();
+
+    // Cleanup timeout
+    return () => clearTimeout(timeoutId);
   }, []);
 
   const containerVariants = {
@@ -91,7 +140,7 @@ export default function Home() {
             className="text-lg text-black dark:text-white max-w-xl mt-2"
             variants={itemVariants}
           >
-            Explore different charities, educators, and other helpful material.
+            Discover charities, mosques, and educational resources in one comprehensive platform. Discover resources to learn languages, coding, science, and more.
           </motion.p>
         </motion.div>
 
@@ -129,8 +178,48 @@ export default function Home() {
               animate={{ opacity: 1, scale: 1 }}
               exit={{ opacity: 0, scale: 0.9 }}
               transition={{ duration: 0.5, ease: "easeOut" }}
+              className="flex flex-col items-center gap-8 w-full max-w-4xl"
             >
-              <RandomCharityButton initialCharity={charity} />
+              {/* Category Cards */}
+              <motion.div 
+                className="flex flex-row items-center gap-8 w-full justify-center"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5, ease: "easeOut" }}
+              >
+                <div className="flex-1 max-w-md">
+                  <CategoryCard category={charitiesCategory} />
+                </div>
+                <div className="flex-1 max-w-md">
+                  <CategoryCard category={mosquesCategory} />
+                </div>
+              </motion.div>
+
+              {/* Random Buttons */}
+              <motion.div 
+                className="flex flex-row items-center gap-8 w-full justify-center"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5, ease: "easeOut", delay: 0.2 }}
+              >
+                {/* Random Charity Button */}
+                <div className="flex-1 flex justify-center max-w-md">
+                  <RandomProfileButton 
+                    category="Charities" 
+                    initialProfile={charity}
+                    buttonText="Pick a Random Charity"
+                  />
+                </div>
+
+                {/* Random Mosque Button */}
+                <div className="flex-1 flex justify-center max-w-md">
+                  <RandomProfileButton 
+                    category="Mosques" 
+                    initialProfile={mosque}
+                    buttonText="Pick a Random Mosque"
+                  />
+                </div>
+              </motion.div>
             </motion.div>
           )}
         </AnimatePresence>

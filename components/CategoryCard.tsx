@@ -6,7 +6,7 @@ const CategoryCard: React.FC<{category: Category}> = ({ category }) => {
     return (
         <Link
             href={`/categories/${category.name}`}
-            className="block p-6 bg-white dark:bg-black rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300 transform hover:scale-105 ease-in-out border border-black dark:border-white"
+            className="block p-6 bg-white dark:bg-black rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300 transform hover:scale-105 ease-in-out border border-black dark:border-white h-80 flex flex-col"
         >
             <div className="flex flex-col items-center mb-4">
                 <div className="w-20 h-20 flex items-center justify-center rounded-full bg-black dark:bg-white text-white dark:text-black text-4xl font-bold mb-3">
@@ -17,7 +17,7 @@ const CategoryCard: React.FC<{category: Category}> = ({ category }) => {
                 </div>
             </div>
             <h2 className="text-2xl font-bold text-black dark:text-white mb-2 text-center">{category.name}</h2>
-            <p className="text-black dark:text-white text-sm mb-4 text-center">
+            <p className="text-black dark:text-white text-sm mb-4 text-center flex-1 overflow-hidden">
                 {category.description || 'No description available.'}
             </p>
 

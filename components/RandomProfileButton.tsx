@@ -6,21 +6,33 @@ import { motion, AnimatePresence } from 'framer-motion';
 import ProfileCard from "./ProfileCard";
 import { Profile } from '../types';
 
-interface RandomCharityButtonProps {
-  initialCharity: Profile | null;
+interface RandomProfileButtonProps {
+  category: string;
+  initialProfile?: Profile | null;
+  buttonText?: string;
 }
 
-export default function RandomCharityButton({ initialCharity }: RandomCharityButtonProps) {
-  const [charity, setCharity] = useState<Profile | null>(initialCharity);
+export default function RandomProfileButton({ 
+  category, 
+  initialProfile = null,
+  buttonText 
+}: RandomProfileButtonProps) {
+  const [profile, setProfile] = useState<Profile | null>(initialProfile);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const refreshRandomCharity = async () => {
+  // Generate button text based on category if not provided
+  const getButtonText = () => {
+    if (buttonText) return buttonText;
+    return `Pick a Random ${category}`;
+  };
+
+  const refreshRandomProfile = async () => {
     setIsLoading(true);
     setError(null);
     
     try {
-      const response = await fetch('/api/random-charity', {
+      const response = await fetch(`/api/random-profile?category=${encodeURIComponent(category)}`, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
@@ -29,14 +41,14 @@ export default function RandomCharityButton({ initialCharity }: RandomCharityBut
 
       if (!response.ok) {
         const errorData = await response.json();
-        throw new Error(errorData.error || 'Failed to fetch random charity');
+        throw new Error(errorData.error || `Failed to fetch random ${category.toLowerCase()}`);
       }
 
-      const newCharity = await response.json();
-      setCharity(newCharity);
+      const newProfile = await response.json();
+      setProfile(newProfile);
     } catch (error) {
-      console.error('Error refreshing random charity:', error);
-      setError(error instanceof Error ? error.message : 'Failed to fetch random charity');
+      console.error(`Error refreshing random ${category.toLowerCase()}:`, error);
+      setError(error instanceof Error ? error.message : `Failed to fetch random ${category.toLowerCase()}`);
     } finally {
       setIsLoading(false);
     }
@@ -72,7 +84,7 @@ export default function RandomCharityButton({ initialCharity }: RandomCharityBut
   return (
     <div className="flex flex-col items-center gap-6 w-full max-w-md">
       <motion.button 
-        onClick={refreshRandomCharity}
+        onClick={refreshRandomProfile}
         disabled={isLoading}
         variants={buttonVariants}
         initial="idle"
@@ -83,7 +95,7 @@ export default function RandomCharityButton({ initialCharity }: RandomCharityBut
         className="rounded-full border border-solid border-black dark:border-white transition-colors flex items-center justify-center bg-black dark:bg-white text-white dark:text-black gap-3 hover:bg-gray-800 dark:hover:bg-gray-200 disabled:opacity-50 disabled:cursor-not-allowed font-medium text-lg h-14 px-8 shadow-lg w-auto"
       >
         {isLoading ? <FaSpinner className="w-6 h-6" /> : <FaRandom className="w-6 h-6" />}
-        {isLoading ? 'Loading...' : 'Pick a Random Charity'}
+        {isLoading ? 'Loading...' : getButtonText()}
       </motion.button>
 
       <AnimatePresence mode="wait">
@@ -102,9 +114,9 @@ export default function RandomCharityButton({ initialCharity }: RandomCharityBut
           </motion.div>
         )}
 
-        {charity && (
+        {profile && (
           <motion.div
-            key={charity.id}
+            key={profile.id}
             variants={cardVariants}
             initial="hidden"
             animate="visible"
@@ -117,21 +129,21 @@ export default function RandomCharityButton({ initialCharity }: RandomCharityBut
               >
                 <ProfileCard
                   profile={{
-                    id: charity.id,
-                    name: charity.name,
-                    description: charity.description,
-                    categories: charity.categories.map(c => ({ id: c.id, name: c.name })),
-                    imageUrl: charity.imageUrl,
-                    links: charity.links,
+                    id: profile.id,
+                    name: profile.name,
+                    description: profile.description,
+                    categories: profile.categories.map(c => ({ id: c.id, name: c.name })),
+                    imageUrl: profile.imageUrl,
+                    links: profile.links,
                   }}
                 />
               </motion.div>
           </motion.div>
         )}
 
-        {!charity && !error && (
+        {!profile && !error && (
           <motion.div
-            key="no-charity"
+            key="no-profile"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -20 }}
@@ -139,7 +151,7 @@ export default function RandomCharityButton({ initialCharity }: RandomCharityBut
             className="block p-6 bg-white dark:bg-black rounded-lg shadow-md border border-black dark:border-white h-full flex flex-col items-center"
           >
             <p className="text-gray-500 dark:text-gray-400 text-center">
-              No charities found. Please check the database or add some charity profiles.
+              No {category.toLowerCase()} found. Please check the database or add some {category.toLowerCase()} profiles.
             </p>
           </motion.div>
         )}
