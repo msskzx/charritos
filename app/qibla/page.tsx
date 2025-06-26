@@ -32,7 +32,9 @@ const QiblaCompass: React.FC = () => {
       try {
         // Request permission for device orientation
         if ('DeviceOrientationEvent' in window && 'requestPermission' in DeviceOrientationEvent) {
-          const permission = await (DeviceOrientationEvent as any).requestPermission();
+          const permission = await (
+            DeviceOrientationEvent as unknown as typeof DeviceOrientationEvent & { requestPermission: () => Promise<'granted' | 'denied'> }
+          ).requestPermission();
           if (permission === 'granted') {
             setPermissionGranted(true);
             window.addEventListener('deviceorientation', handleOrientation);
@@ -77,14 +79,22 @@ const QiblaCompass: React.FC = () => {
   }, []);
 
   const calculateQiblaDirection = (lat: number, lng: number): number => {
-    const latDiff = MECCA_LAT - lat;
-    const lngDiff = MECCA_LNG - lng;
+    // Convert degrees to radians
+    const lat1 = lat * Math.PI / 180;
+    const lng1 = lng * Math.PI / 180;
+    const lat2 = MECCA_LAT * Math.PI / 180;
+    const lng2 = MECCA_LNG * Math.PI / 180;
     
-    const y = Math.sin(lngDiff * Math.PI / 180) * Math.cos(MECCA_LAT * Math.PI / 180);
-    const x = Math.cos(lat * Math.PI / 180) * Math.sin(MECCA_LAT * Math.PI / 180) - 
-              Math.sin(lat * Math.PI / 180) * Math.cos(MECCA_LAT * Math.PI / 180) * Math.cos(lngDiff * Math.PI / 180);
+    // Calculate the difference in longitude
+    const deltaLng = lng2 - lng1;
+    
+    // Calculate the Qibla direction using the correct formula
+    const y = Math.sin(deltaLng);
+    const x = Math.cos(lat1) * Math.tan(lat2) - Math.sin(lat1) * Math.cos(deltaLng);
     
     let qiblaAngle = Math.atan2(y, x) * 180 / Math.PI;
+    
+    // Convert to compass bearing (0-360 degrees, where 0 is North)
     qiblaAngle = (qiblaAngle + 360) % 360;
     
     return qiblaAngle;
@@ -115,7 +125,7 @@ const QiblaCompass: React.FC = () => {
           <div className="max-w-md mx-auto bg-gray-100 dark:bg-gray-900 rounded-lg shadow-lg p-6 text-center">
             <h1 className="text-2xl font-bold text-black dark:text-white mb-4">Qibla</h1>
             <p className="text-gray-600 dark:text-gray-300">
-              Your device doesn't support compass functionality or permission was denied.
+              Your device doesn&apos;t support compass functionality or permission was denied.
             </p>
           </div>
         </div>
@@ -132,7 +142,7 @@ const QiblaCompass: React.FC = () => {
           <div className="max-w-md mx-auto bg-gray-100 dark:bg-gray-900 rounded-lg shadow-lg p-6 text-center">
             <h1 className="text-2xl font-bold text-black dark:text-white mb-4">Qibla</h1>
             <p className="text-gray-600 dark:text-gray-300 mb-4">
-              Please grant permission to access your device's compass sensor.
+              Please grant permission to access your device&apos;s compass sensor.
             </p>
             <button 
               onClick={() => window.location.reload()}
