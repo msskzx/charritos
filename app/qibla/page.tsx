@@ -9,6 +9,9 @@ const QiblaCompass: React.FC = () => {
   const [qiblaDirection, setQiblaDirection] = useState<number>(0);
   const [isSupported, setIsSupported] = useState<boolean>(true);
   const [permissionGranted, setPermissionGranted] = useState<boolean>(false);
+  const [locationPermission, setLocationPermission] = useState<'granted' | 'denied' | 'prompt'>('prompt');
+  const [locationGranted, setLocationGranted] = useState<boolean>(false);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
   const compassRef = useRef<HTMLDivElement>(null);
 
   // Mecca coordinates (approximate)
@@ -19,6 +22,7 @@ const QiblaCompass: React.FC = () => {
     // Check if device orientation is supported
     if (!window.DeviceOrientationEvent) {
       setIsSupported(false);
+      setIsLoading(false);
       return;
     }
 
@@ -52,7 +56,58 @@ const QiblaCompass: React.FC = () => {
       }
     };
 
-    // Get user's current location to calculate Qibla direction
+    // Check location permission status
+    const checkLocationPermission = async () => {
+      if ('permissions' in navigator) {
+        try {
+          const permission = await navigator.permissions.query({ name: 'geolocation' as PermissionName });
+          setLocationPermission(permission.state);
+          if (permission.state === 'granted') {
+            setLocationGranted(true);
+            getLocation();
+          }
+        } catch (error) {
+          console.error('Error checking location permission:', error);
+          setLocationPermission('prompt');
+        }
+      } else {
+        // Fallback for browsers that don't support permissions API
+        setLocationPermission('prompt');
+      }
+    };
+
+    const getLocation = () => {
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(
+          (position) => {
+            const userLat = position.coords.latitude;
+            const userLng = position.coords.longitude;
+            
+            // Calculate Qibla direction
+            const qiblaAngle = calculateQiblaDirection(userLat, userLng);
+            setQiblaDirection(qiblaAngle);
+            setLocationGranted(true);
+          },
+          (error) => {
+            console.error('Error getting location:', error);
+            setLocationPermission('denied');
+            // Use a default direction if location access is denied
+            setQiblaDirection(45);
+          }
+        );
+      }
+    };
+
+    requestPermission();
+    checkLocationPermission();
+    setIsLoading(false);
+
+    return () => {
+      window.removeEventListener('deviceorientation', handleOrientation);
+    };
+  }, []);
+
+  const requestLocationPermission = async () => {
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
         (position) => {
@@ -62,21 +117,18 @@ const QiblaCompass: React.FC = () => {
           // Calculate Qibla direction
           const qiblaAngle = calculateQiblaDirection(userLat, userLng);
           setQiblaDirection(qiblaAngle);
+          setLocationGranted(true);
+          setLocationPermission('granted');
         },
         (error) => {
           console.error('Error getting location:', error);
+          setLocationPermission('denied');
           // Use a default direction if location access is denied
           setQiblaDirection(45);
         }
       );
     }
-
-    requestPermission();
-
-    return () => {
-      window.removeEventListener('deviceorientation', handleOrientation);
-    };
-  }, []);
+  };
 
   const calculateQiblaDirection = (lat: number, lng: number): number => {
     // Convert degrees to radians
@@ -117,6 +169,22 @@ const QiblaCompass: React.FC = () => {
     return 'North';
   };
 
+  if (isLoading) {
+    return (
+      <div className="min-h-screen bg-white dark:bg-black flex flex-col">
+        <NavBar />
+        <div className="flex-1 container mx-auto px-4 py-8">
+          <div className="max-w-md mx-auto bg-gray-100 dark:bg-gray-900 rounded-lg shadow-lg p-6 text-center">
+            <div className="flex justify-center items-center">
+              <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-gray-900 dark:border-white"></div>
+            </div>
+          </div>
+        </div>
+        <Footer />
+      </div>
+    );
+  }
+
   if (!isSupported) {
     return (
       <div className="min-h-screen bg-white dark:bg-black flex flex-col">
@@ -150,6 +218,34 @@ const QiblaCompass: React.FC = () => {
             >
               Grant Permission
             </button>
+          </div>
+        </div>
+        <Footer />
+      </div>
+    );
+  }
+
+  // Show location permission request if not granted
+  if (!locationGranted && locationPermission !== 'denied') {
+    return (
+      <div className="min-h-screen bg-white dark:bg-black flex flex-col">
+        <NavBar />
+        <div className="flex-1 container mx-auto px-4 py-8">
+          <div className="max-w-md mx-auto bg-gray-100 dark:bg-gray-900 rounded-lg shadow-lg p-6 text-center">
+            <h1 className="text-2xl font-bold text-black dark:text-white mb-4">📍 Location Required</h1>
+            <p className="text-gray-600 dark:text-gray-300 mb-6">
+              To accurately calculate the Qibla direction, we need access to your location. 
+              This helps us determine the correct direction to Mecca from your current position.
+            </p>
+            <button 
+              onClick={requestLocationPermission}
+              className="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition-colors mb-4"
+            >
+              Allow Location Access
+            </button>
+            <p className="text-sm text-gray-500 dark:text-gray-400">
+              Your location is only used to calculate the Qibla direction and is not stored.
+            </p>
           </div>
         </div>
         <Footer />
@@ -217,6 +313,11 @@ const QiblaCompass: React.FC = () => {
             <div className="text-sm text-gray-600 dark:text-gray-300">
               Rotation: {getRotationAngle().toFixed(1)}°
             </div>
+            {locationPermission === 'denied' && (
+              <div className="text-sm text-yellow-600 dark:text-yellow-400 mt-2">
+                ⚠️ Using default location (45°). Enable location for accurate Qibla direction.
+              </div>
+            )}
           </div>
           
         </div>
