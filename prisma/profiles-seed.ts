@@ -9,7 +9,7 @@ async function main() {
 
   // Get all categories to link profiles to them
   const categories = await prisma.category.findMany()
-
+  
   if (categories.length === 0) {
     console.log('❌ No categories found. Please run categories-seed first.')
     return

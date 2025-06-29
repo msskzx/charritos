@@ -28,7 +28,6 @@ const ProfilesPage = () => {
                 const data = await response.json();
                 setProfiles(data);
             } catch (error) {
-                console.error('Error fetching profiles:', error);
                 setError('Failed to load profiles');
             } finally {
                 setIsLoading(false);

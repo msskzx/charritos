@@ -182,28 +182,28 @@ export default function Home() {
             >
               {/* Category Cards */}
               <motion.div 
-                className="flex flex-row items-center gap-8 w-full justify-center"
+                className="flex flex-col md:flex-row items-center gap-8 w-full justify-center"
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.5, ease: "easeOut" }}
               >
-                <div className="flex-1 max-w-md">
+                <div className="flex-1 max-w-md w-full">
                   <CategoryCard category={charitiesCategory} />
                 </div>
-                <div className="flex-1 max-w-md">
+                <div className="flex-1 max-w-md w-full">
                   <CategoryCard category={mosquesCategory} />
                 </div>
               </motion.div>
 
               {/* Random Buttons */}
               <motion.div 
-                className="flex flex-row items-center gap-8 w-full justify-center"
+                className="flex flex-col md:flex-row items-center gap-8 w-full justify-center"
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.5, ease: "easeOut", delay: 0.2 }}
               >
                 {/* Random Charity Button */}
-                <div className="flex-1 flex justify-center max-w-md">
+                <div className="flex-1 flex justify-center max-w-md w-full">
                   <RandomProfileButton 
                     category="Charities" 
                     initialProfile={charity}
@@ -212,7 +212,7 @@ export default function Home() {
                 </div>
 
                 {/* Random Mosque Button */}
-                <div className="flex-1 flex justify-center max-w-md">
+                <div className="flex-1 flex justify-center max-w-md w-full">
                   <RandomProfileButton 
                     category="Mosques" 
                     initialProfile={mosque}
