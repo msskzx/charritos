@@ -27,7 +27,7 @@ const ProfilesPage = () => {
 
                 const data = await response.json();
                 setProfiles(data);
-            } catch (error) {
+            } catch {
                 setError('Failed to load profiles');
             } finally {
                 setIsLoading(false);

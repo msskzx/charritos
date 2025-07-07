@@ -1,6 +1,6 @@
 import { PrismaClient } from '@prisma/client'
 // import { profiles } from './profiles-data'
-import { profiles } from './profiles-data-2'
+import { profiles } from './profiles-data-mosques'
 
 const prisma = new PrismaClient()
 

@@ -6,7 +6,7 @@ import NavBar from "../components/NavBar";
 import Footer from "../components/Footer";
 import RandomProfileButton from "../components/RandomProfileButton";
 import CategoryCard from "../components/CategoryCard";
-import { Profile } from '../types';
+import { Profile, Category } from '../types';
 
 export default function Home() {
   const [charity, setCharity] = useState<Profile | null>(null);
@@ -39,8 +39,8 @@ export default function Home() {
         const categoriesResponse = await fetch('/api/categories');
         if (categoriesResponse.ok) {
           const categoriesData = await categoriesResponse.json();
-          const charitiesCategory = categoriesData.find((cat: any) => cat.name === 'Charities');
-          const mosquesCategory = categoriesData.find((cat: any) => cat.name === 'Mosques');
+          const charitiesCategory = categoriesData.find((cat: Category) => cat.name === 'Charities');
+          const mosquesCategory = categoriesData.find((cat: Category) => cat.name === 'Mosques');
           
           if (charitiesCategory) {
             setCharityCount(charitiesCategory.profileCount);
@@ -63,8 +63,7 @@ export default function Home() {
           const mosqueData = await mosqueResponse.json();
           setMosque(mosqueData);
         }
-      } catch (error) {
-        console.error('Error fetching initial data:', error);
+      } catch {
         setError('Failed to load data');
       } finally {
         setIsLoading(false);
@@ -140,7 +139,7 @@ export default function Home() {
             className="text-lg text-black dark:text-white max-w-xl mt-2"
             variants={itemVariants}
           >
-            Discover charities, mosques, and educational resources in one comprehensive platform. Discover resources to learn languages, coding, science, and more.
+            Discover charities, mosques, and books in one comprehensive platform.
           </motion.p>
         </motion.div>
 
