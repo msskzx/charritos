@@ -4,9 +4,11 @@ import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import NavBar from "../components/NavBar";
 import Footer from "../components/Footer";
-import RandomProfileButton from "../components/RandomProfileButton";
+import RandomProfileButton from "../components/RandomProfileOverlay";
 import CategoryCard from "../components/CategoryCard";
 import { Profile, Category } from '../types';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faHandHoldingHeart, faMosque, faBook } from '@fortawesome/free-solid-svg-icons';
 
 export default function Home() {
   const [charity, setCharity] = useState<Profile | null>(null);
@@ -15,6 +17,10 @@ export default function Home() {
   const [error, setError] = useState<string | null>(null);
   const [charityCount, setCharityCount] = useState<number>(0);
   const [mosqueCount, setMosqueCount] = useState<number>(0);
+  const [bookCount, setBookCount] = useState<number>(0);
+  const [animatedCharity, setAnimatedCharity] = useState(0);
+  const [animatedMosque, setAnimatedMosque] = useState(0);
+  const [animatedBook, setAnimatedBook] = useState(0);
 
   // Category data for the cards
   const charitiesCategory = {
@@ -41,12 +47,16 @@ export default function Home() {
           const categoriesData = await categoriesResponse.json();
           const charitiesCategory = categoriesData.find((cat: Category) => cat.name === 'Charities');
           const mosquesCategory = categoriesData.find((cat: Category) => cat.name === 'Mosques');
+          const booksCategory = categoriesData.find((cat: Category) => cat.name === 'Books');
           
           if (charitiesCategory) {
             setCharityCount(charitiesCategory.profileCount);
           }
           if (mosquesCategory) {
             setMosqueCount(mosquesCategory.profileCount);
+          }
+          if (booksCategory) {
+            setBookCount(booksCategory.profileCount);
           }
         }
 
@@ -81,6 +91,26 @@ export default function Home() {
     return () => clearTimeout(timeoutId);
   }, []);
 
+  useEffect(() => {
+    const duration = 800;
+    const animateValue = (start: number, end: number, setter: (v: number) => void) => {
+      if (start === end) return;
+      const startTime = performance.now();
+      const step = (now: number) => {
+        const elapsed = now - startTime;
+        const progress = Math.min(elapsed / duration, 1);
+        const value = Math.floor(start + (end - start) * progress);
+        setter(value);
+        if (progress < 1) requestAnimationFrame(step);
+      };
+      requestAnimationFrame(step);
+    };
+    animateValue(animatedCharity, charityCount, setAnimatedCharity);
+    animateValue(animatedMosque, mosqueCount, setAnimatedMosque);
+    animateValue(animatedBook, bookCount, setAnimatedBook);
+    // eslint-disable-next-line
+  }, [charityCount, mosqueCount, bookCount]);
+
   const containerVariants = {
     hidden: { opacity: 0 },
     visible: {
@@ -92,56 +122,50 @@ export default function Home() {
     }
   };
 
-  const itemVariants = {
-    hidden: { opacity: 0, y: 20 },
-    visible: {
-      opacity: 1,
-      y: 0,
-      transition: {
-        duration: 0.5,
-        ease: "easeOut" as const
-      }
-    }
-  };
 
-  const titleVariants = {
-    hidden: { opacity: 0, scale: 0.8 },
-    visible: {
-      opacity: 1,
-      scale: 1,
-      transition: {
-        duration: 0.7,
-        ease: "easeOut" as const
-      }
-    }
-  };
 
   return (
     <div className="flex flex-col min-h-screen bg-white dark:bg-black">
       <NavBar />
+      {/* Motivating Intro Section */}
+      <section className="w-full bg-gradient-to-b from-gray-100 to-white dark:from-black dark:to-gray-900 py-10 px-4 flex flex-col items-center text-center border-b border-gray-200 dark:border-gray-800">
+        <h1 className="text-4xl md:text-5xl font-extrabold text-black dark:text-white mb-4 drop-shadow-lg">Welcome to Charritos!</h1>
+        <p className="text-lg md:text-xl text-gray-700 dark:text-gray-200 max-w-2xl mb-6">
+          Discover and support inspiring <span className="font-semibold text-black dark:text-white">charities</span>, learn about <span className="font-semibold text-black dark:text-white">mosques</span> around the world, learn about Islam, and discover many online libraries offering enriching <span className="font-semibold text-black dark:text-white">books</span> from around the world.
+        </p>
+        <div className="flex flex-wrap justify-center gap-6 mt-2">
+          <div className="bg-white dark:bg-black rounded-lg shadow px-6 py-4 border border-gray-200 dark:border-gray-800 flex flex-col items-center">
+            <span className="text-2xl font-bold text-black dark:text-white">
+              <motion.span animate={{}}>{animatedCharity}</motion.span>
+            </span>
+            <div className="text-gray-700 dark:text-gray-300 text-sm flex items-center gap-2 mt-1">
+              <FontAwesomeIcon icon={faHandHoldingHeart} className="w-5 h-5" /> Charities
+            </div>
+          </div>
+          <div className="bg-white dark:bg-black rounded-lg shadow px-6 py-4 border border-gray-200 dark:border-gray-800 flex flex-col items-center">
+            <span className="text-2xl font-bold text-black dark:text-white">
+              <motion.span animate={{}}>{animatedMosque}</motion.span>
+            </span>
+            <div className="text-gray-700 dark:text-gray-300 text-sm flex items-center gap-2 mt-1">
+              <FontAwesomeIcon icon={faMosque} className="w-5 h-5" /> Mosques
+            </div>
+          </div>
+          <div className="bg-white dark:bg-black rounded-lg shadow px-6 py-4 border border-gray-200 dark:border-gray-800 flex flex-col items-center">
+            <span className="text-2xl font-bold text-black dark:text-white">
+              <motion.span animate={{}}>{animatedBook}</motion.span>
+            </span>
+            <div className="text-gray-700 dark:text-gray-300 text-sm flex items-center gap-2 mt-1">
+              <FontAwesomeIcon icon={faBook} className="w-5 h-5" /> Libraries
+            </div>
+          </div>
+        </div>
+      </section>
       <motion.main 
         className="flex flex-1 flex-col items-center justify-center gap-8 p-4"
         variants={containerVariants}
         initial="hidden"
         animate="visible"
       >
-        <motion.div 
-          className="flex flex-col items-center gap-2 mb-4 text-center"
-          variants={itemVariants}
-        >
-          <motion.h1 
-            className="text-4xl font-extrabold text-black dark:text-white tracking-tight drop-shadow-lg"
-            variants={titleVariants}
-          >
-            Charritos
-          </motion.h1>
-          <motion.p 
-            className="text-lg text-black dark:text-white max-w-xl mt-2"
-            variants={itemVariants}
-          >
-            Discover charities, mosques, and books in one comprehensive platform.
-          </motion.p>
-        </motion.div>
 
         <AnimatePresence mode="wait">
           {isLoading ? (
@@ -193,36 +217,39 @@ export default function Home() {
                   <CategoryCard category={mosquesCategory} />
                 </div>
               </motion.div>
-
-              {/* Random Buttons */}
-              <motion.div 
-                className="flex flex-col md:flex-row items-center gap-8 w-full justify-center"
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.5, ease: "easeOut", delay: 0.2 }}
-              >
-                {/* Random Charity Button */}
-                <div className="flex-1 flex justify-center max-w-md w-full">
-                  <RandomProfileButton 
-                    category="Charities" 
-                    initialProfile={charity}
-                    buttonText="Pick a Random Charity"
-                  />
-                </div>
-
-                {/* Random Mosque Button */}
-                <div className="flex-1 flex justify-center max-w-md w-full">
-                  <RandomProfileButton 
-                    category="Mosques" 
-                    initialProfile={mosque}
-                    buttonText="Pick a Random Mosque"
-                  />
-                </div>
-              </motion.div>
             </motion.div>
           )}
         </AnimatePresence>
       </motion.main>
+
+      {/* Random Cards Section at Bottom */}
+      <section className="w-full bg-gray-100 dark:bg-black py-12 px-4">
+        <div className="max-w-6xl mx-auto">
+          <div className="text-center mb-8">
+            <h2 className="text-3xl md:text-4xl font-bold text-black dark:text-white mb-4">
+              Discover Something New
+            </h2>
+            <p className="text-lg text-gray-700 dark:text-gray-300 max-w-2xl mx-auto">
+              Can&apos;t decide what to explore? Let us surprise you with a random charity to support or a beautiful mosque to discover. Every click opens a new opportunity to make a difference or learn something amazing.
+            </p>
+          </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
+              <div className="w-full">
+                <RandomProfileButton 
+                  category="Charities" 
+                  initialProfile={charity}
+                />
+              </div>
+              <div className="w-full">
+                <RandomProfileButton 
+                  category="Mosques" 
+                  initialProfile={mosque}
+                />
+              </div>
+            </div>
+        </div>
+      </section>
+
       <Footer />
     </div>
   );

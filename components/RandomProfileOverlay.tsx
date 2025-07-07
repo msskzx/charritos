@@ -27,7 +27,7 @@ export default function RandomProfileButton({
   // Generate button text based on category if not provided
   const getButtonText = () => {
     if (buttonText) return buttonText;
-    return `Pick a Random ${category}`;
+    return ''
   };
 
   const refreshRandomProfile = async () => {
@@ -85,7 +85,7 @@ export default function RandomProfileButton({
   };
 
   return (
-    <div className="flex flex-col items-center gap-6 w-full max-w-md">
+    <div className="flex flex-col items-center gap-6 w-full max-w-2xl mx-auto">
       <motion.button 
         onClick={refreshRandomProfile}
         disabled={isLoading}
@@ -95,9 +95,9 @@ export default function RandomProfileButton({
         whileTap="tap"
         animate="idle"
         transition={{ duration: 0.2 }}
-        className="rounded-full border border-solid border-black dark:border-white transition-colors flex items-center justify-center bg-black dark:bg-white text-white dark:text-black gap-3 hover:bg-gray-800 dark:hover:bg-gray-200 disabled:opacity-50 disabled:cursor-not-allowed font-medium text-lg h-14 px-8 shadow-lg w-auto"
+        className="rounded-full border border-solid border-black dark:border-white transition-colors flex items-center justify-center bg-black dark:bg-white text-white dark:text-black hover:bg-gray-800 dark:hover:bg-gray-200 disabled:opacity-50 disabled:cursor-not-allowed font-medium text-lg h-14 w-14 shadow-lg"
       >
-        {isLoading ? <FaSpinner className="w-6 h-6" /> : <><FontAwesomeIcon icon={faShuffle} className="w-6 h-6" /> {getButtonText()}</>}
+        {isLoading ? <FaSpinner className="w-6 h-6" /> : <FontAwesomeIcon icon={faShuffle} className="w-6 h-6" />}
       </motion.button>
 
       <AnimatePresence mode="wait">
@@ -108,7 +108,7 @@ export default function RandomProfileButton({
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -10 }}
             transition={{ duration: 0.3 }}
-            className="block p-4 bg-red-50 dark:bg-red-900/20 rounded-lg border border-red-200 dark:border-red-800"
+            className="block p-4 bg-red-50 dark:bg-red-900/20 rounded-lg border border-red-200 dark:border-red-800 w-full"
           >
             <p className="text-red-600 dark:text-red-400 text-center text-sm">
               {error}
@@ -123,7 +123,7 @@ export default function RandomProfileButton({
             initial="hidden"
             animate="visible"
             exit="exit"
-            className="block"
+            className="block w-full"
           >
               <motion.div 
                 whileHover={{ scale: 1.02 }}
@@ -150,10 +150,10 @@ export default function RandomProfileButton({
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -20 }}
             transition={{ duration: 0.3 }}
-            className="block p-6 bg-white dark:bg-black rounded-lg shadow-md border border-black dark:border-white h-full flex flex-col items-center"
+            className="block p-6 bg-white dark:bg-black rounded-lg shadow-md border border-black dark:border-white w-full flex flex-col items-center justify-center min-h-[200px]"
           >
             <p className="text-gray-500 dark:text-gray-400 text-center">
-              No {category.toLowerCase()} found. Please check the database or add some {category.toLowerCase()} profiles.
+              No {category.toLowerCase()} found.
             </p>
           </motion.div>
         )}
