@@ -227,10 +227,10 @@ export default function Home() {
         <div className="max-w-6xl mx-auto">
           <div className="text-center mb-8">
             <h2 className="text-3xl md:text-4xl font-bold text-black dark:text-white mb-4">
-              Discover Something New
+             Too Tired? Pick Randomly!
             </h2>
             <p className="text-lg text-gray-700 dark:text-gray-300 max-w-2xl mx-auto">
-              Can&apos;t decide what to explore? Let us surprise you with a random charity to support or a beautiful mosque to discover. Every click opens a new opportunity to make a difference or learn something amazing.
+              Can&apos;t decide what to explore? Let us surprise you with a random charity or mosque to support. Every click opens a new opportunity to make a difference. Click on the buttons below to pick a new charity or mosque randomly.
             </p>
           </div>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">

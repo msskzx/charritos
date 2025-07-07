@@ -1,7 +1,6 @@
 'use client';
 
 import { useState } from 'react';
-import { FaSpinner } from "react-icons/fa";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faShuffle } from '@fortawesome/free-solid-svg-icons';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -17,18 +16,20 @@ interface RandomProfileButtonProps {
 
 export default function RandomProfileButton({ 
   category, 
-  initialProfile = null,
-  buttonText 
+  initialProfile = null
 }: RandomProfileButtonProps) {
   const [profile, setProfile] = useState<Profile | null>(initialProfile);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [isInitialLoading, setIsInitialLoading] = useState(!initialProfile);
 
-  // Generate button text based on category if not provided
-  const getButtonText = () => {
-    if (buttonText) return buttonText;
-    return ''
-  };
+  // Update profile when initialProfile prop changes
+  React.useEffect(() => {
+    if (initialProfile) {
+      setProfile(initialProfile);
+      setIsInitialLoading(false);
+    }
+  }, [initialProfile]);
 
   const refreshRandomProfile = async () => {
     setIsLoading(true);
@@ -97,7 +98,7 @@ export default function RandomProfileButton({
         transition={{ duration: 0.2 }}
         className="rounded-full border border-solid border-black dark:border-white transition-colors flex items-center justify-center bg-black dark:bg-white text-white dark:text-black hover:bg-gray-800 dark:hover:bg-gray-200 disabled:opacity-50 disabled:cursor-not-allowed font-medium text-lg h-14 w-14 shadow-lg"
       >
-        {isLoading ? <FaSpinner className="w-6 h-6" /> : <FontAwesomeIcon icon={faShuffle} className="w-6 h-6" />}
+        <FontAwesomeIcon icon={faShuffle} className="w-6 h-6" />
       </motion.button>
 
       <AnimatePresence mode="wait">
@@ -116,7 +117,22 @@ export default function RandomProfileButton({
           </motion.div>
         )}
 
-        {profile && (
+        {(isInitialLoading || isLoading) && (
+          <motion.div
+            key="loading"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -20 }}
+            transition={{ duration: 0.3 }}
+            className="block p-6 bg-white dark:bg-black rounded-lg shadow-md border border-black dark:border-white w-full flex flex-col items-center justify-center min-h-[200px]"
+          >
+            <div className="flex flex-col items-center gap-4">
+              <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-black dark:border-white"></div>
+            </div>
+          </motion.div>
+        )}
+
+        {profile && !isInitialLoading && !isLoading && (
           <motion.div
             key={profile.id}
             variants={cardVariants}
@@ -130,20 +146,13 @@ export default function RandomProfileButton({
                 whileTap={{ scale: 0.98 }}
               >
                 <ProfileCard
-                  profile={{
-                    id: profile.id,
-                    name: profile.name,
-                    description: profile.description,
-                    categories: profile.categories.map(c => ({ id: c.id, name: c.name })),
-                    imageUrl: profile.imageUrl,
-                    links: profile.links,
-                  }}
+                  profile={profile}
                 />
               </motion.div>
           </motion.div>
         )}
 
-        {!profile && !error && (
+        {!profile && !error && !isInitialLoading && !isLoading && (
           <motion.div
             key="no-profile"
             initial={{ opacity: 0, y: 20 }}
