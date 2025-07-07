@@ -62,37 +62,37 @@ export async function GET(req: NextRequest) {
     const page = parseInt(searchParams.get('page') || '1', 10);
     const limit = parseInt(searchParams.get('limit') || '12', 10);
     const search = searchParams.get('search') || '';
-
-    // Build where clause for search
-    const where = search
-      ? { name: { contains: search, mode: 'insensitive' as const } }
-      : undefined;
-
-    const total = await prisma.profile.count({ where });
-    const profiles = await prisma.profile.findMany({
-      where,
-      select: {
-        id: true,
-        name: true,
-        description: true,
-        imageUrl: true,
-        city: true,
-        country: true,
-        links: true,
-        categories: {
-          select: {
-            id: true,
-            name: true
+    if (search) {
+      const where = { name: { contains: search, mode: 'insensitive' as const } };
+      const total = await prisma.profile.count({ where });
+      const profiles = await prisma.profile.findMany({
+        where,
+        select: {
+          id: true,
+          name: true,
+          description: true,
+          imageUrl: true,
+          city: true,
+          country: true,
+          links: true,
+          categories: {
+            select: {
+              id: true,
+              name: true
+            }
           }
-        }
-      },
-      orderBy: {
-        name: 'asc'
-      },
-      skip: (page - 1) * limit,
-      take: limit
-    });
-    return NextResponse.json({ profiles, total });
+        },
+        orderBy: {
+          name: 'asc'
+        },
+        skip: (page - 1) * limit,
+        take: limit
+      });
+      return NextResponse.json({ profiles, total });
+    } else {
+      const { profiles, total } = await getProfiles(page, limit);
+      return NextResponse.json({ profiles, total });
+    }
   } catch (error) {
     console.error('API Error:', error);
     return NextResponse.json(

@@ -53,8 +53,6 @@ export async function GET(
       city: profile.city,
       country: profile.country,
       links: profile.links,
-      createdAt: profile.createdAt,
-      updatedAt: profile.updatedAt,
       categories: profile.categories
     };
 

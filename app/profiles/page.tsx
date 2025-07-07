@@ -66,9 +66,12 @@ const ProfilesPage = () => {
             <NavBar />
 
             <main className="flex-grow container mx-auto p-8">
-                <h1 className="text-4xl font-extrabold text-center text-black dark:text-white mb-12 drop-shadow-lg">
+                <h1 className="text-4xl font-extrabold text-center text-black dark:text-white mb-2 drop-shadow-lg">
                     All Profiles
                 </h1>
+                <div className="text-center text-gray-600 dark:text-gray-300 mb-10">
+                    {total} profile{total === 1 ? '' : 's'} found
+                </div>
 
                 {/* Search Bar */}
                 <div className="flex justify-center mb-8">
