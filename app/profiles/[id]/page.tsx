@@ -5,6 +5,8 @@ import Link from 'next/link';
 import NavBar from '../../../components/NavBar';
 import Footer from '../../../components/Footer';
 import { Profile, Link as LinkType } from '../../../types';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faLocationDot } from '@fortawesome/free-solid-svg-icons';
 
 interface PageProps {
     params: Promise<{
@@ -114,6 +116,16 @@ const ProfileDetailPage = ({ params }: PageProps) => {
                     <h1 className="text-5xl font-extrabold text-black dark:text-white mb-4 drop-shadow-lg">
                         {profile.name}
                     </h1>
+                    {(profile.city || profile.country) && (
+                        <div className="flex items-center justify-center gap-2 text-lg text-gray-700 dark:text-gray-300 mb-2">
+                            <span>
+                                <FontAwesomeIcon icon={faLocationDot} aria-label="location" />
+                            </span>
+                            <span>
+                                {profile.city}{profile.city && profile.country ? ', ' : ''}{profile.country}
+                            </span>
+                        </div>
+                    )}
                     {profile.description && (
                         <p className="text-xl text-black dark:text-white max-w-3xl mx-auto mb-6">
                             {profile.description}

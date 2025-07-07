@@ -3,6 +3,8 @@ export interface Profile {
   name: string;
   description: string | null;
   imageUrl: string | null;
+  city?: string | null;
+  country?: string | null;
   links: any;
   categories: {
     id: string;

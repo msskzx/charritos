@@ -1,15 +1,18 @@
 'use client';
 
 import { useState } from 'react';
-import { FaRandom, FaSpinner } from "react-icons/fa";
+import { FaSpinner } from "react-icons/fa";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faShuffle } from '@fortawesome/free-solid-svg-icons';
 import { motion, AnimatePresence } from 'framer-motion';
 import ProfileCard from "./ProfileCard";
 import { Profile } from '../types';
+import React from 'react';
 
 interface RandomProfileButtonProps {
   category: string;
   initialProfile?: Profile | null;
-  buttonText?: string;
+  buttonText?: React.ReactNode;
 }
 
 export default function RandomProfileButton({ 
@@ -94,8 +97,7 @@ export default function RandomProfileButton({
         transition={{ duration: 0.2 }}
         className="rounded-full border border-solid border-black dark:border-white transition-colors flex items-center justify-center bg-black dark:bg-white text-white dark:text-black gap-3 hover:bg-gray-800 dark:hover:bg-gray-200 disabled:opacity-50 disabled:cursor-not-allowed font-medium text-lg h-14 px-8 shadow-lg w-auto"
       >
-        {isLoading ? <FaSpinner className="w-6 h-6" /> : <FaRandom className="w-6 h-6" />}
-        {isLoading ? 'Loading...' : getButtonText()}
+        {isLoading ? <FaSpinner className="w-6 h-6" /> : <><FontAwesomeIcon icon={faShuffle} className="w-6 h-6" /> {getButtonText()}</>}
       </motion.button>
 
       <AnimatePresence mode="wait">

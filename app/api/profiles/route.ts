@@ -1,4 +1,4 @@
-import { NextResponse } from 'next/server';
+import { NextResponse, NextRequest } from 'next/server';
 import { PrismaClient } from '@prisma/client';
 import { Profile } from '../../../types';
 
@@ -11,10 +11,18 @@ const prisma = globalForPrisma.prisma ?? new PrismaClient();
 
 if (process.env.NODE_ENV !== 'production') globalForPrisma.prisma = prisma;
 
-const getProfiles = async (): Promise<Profile[]> => {
+const getProfiles = async (page: number, limit: number): Promise<{profiles: Profile[], total: number}> => {
   try {
+    const total = await prisma.profile.count();
     const profiles = await prisma.profile.findMany({
-      include: {
+      select: {
+        id: true,
+        name: true,
+        description: true,
+        imageUrl: true,
+        city: true,
+        country: true,
+        links: true,
         categories: {
           select: {
             id: true,
@@ -24,28 +32,67 @@ const getProfiles = async (): Promise<Profile[]> => {
       },
       orderBy: {
         name: 'asc'
-      }
+      },
+      skip: (page - 1) * limit,
+      take: limit
     });
 
-    return profiles.map(profile => ({
-      id: profile.id,
-      name: profile.name,
-      description: profile.description,
-      imageUrl: profile.imageUrl,
-      links: profile.links,
-      categories: profile.categories
-    }));
+    return {
+      profiles: profiles.map(profile => ({
+        id: profile.id,
+        name: profile.name,
+        description: profile.description,
+        imageUrl: profile.imageUrl,
+        city: profile.city,
+        country: profile.country,
+        links: profile.links,
+        categories: profile.categories
+      })),
+      total
+    };
   } catch (error) {
     console.error('Error fetching profiles:', error);
     throw error;
   }
 };
 
-export async function GET() {
+export async function GET(req: NextRequest) {
   try {
-    const profiles = await getProfiles();
-    
-    return NextResponse.json(profiles);
+    const { searchParams } = new URL(req.url);
+    const page = parseInt(searchParams.get('page') || '1', 10);
+    const limit = parseInt(searchParams.get('limit') || '12', 10);
+    const search = searchParams.get('search') || '';
+
+    // Build where clause for search
+    const where = search
+      ? { name: { contains: search, mode: 'insensitive' as const } }
+      : undefined;
+
+    const total = await prisma.profile.count({ where });
+    const profiles = await prisma.profile.findMany({
+      where,
+      select: {
+        id: true,
+        name: true,
+        description: true,
+        imageUrl: true,
+        city: true,
+        country: true,
+        links: true,
+        categories: {
+          select: {
+            id: true,
+            name: true
+          }
+        }
+      },
+      orderBy: {
+        name: 'asc'
+      },
+      skip: (page - 1) * limit,
+      take: limit
+    });
+    return NextResponse.json({ profiles, total });
   } catch (error) {
     console.error('API Error:', error);
     return NextResponse.json(

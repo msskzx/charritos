@@ -20,7 +20,14 @@ export async function GET(
     // Get the profile with its categories
     const profile = await prisma.profile.findUnique({
       where: { id },
-      include: {
+      select: {
+        id: true,
+        name: true,
+        description: true,
+        imageUrl: true,
+        city: true,
+        country: true,
+        links: true,
         categories: {
           select: {
             id: true,
@@ -43,6 +50,8 @@ export async function GET(
       name: profile.name,
       description: profile.description,
       imageUrl: profile.imageUrl,
+      city: profile.city,
+      country: profile.country,
       links: profile.links,
       createdAt: profile.createdAt,
       updatedAt: profile.updatedAt,

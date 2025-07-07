@@ -7,6 +7,8 @@ import Footer from "../components/Footer";
 import RandomProfileButton from "../components/RandomProfileButton";
 import CategoryCard from "../components/CategoryCard";
 import { Profile, Category } from '../types';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faShuffle } from '@fortawesome/free-solid-svg-icons';
 
 export default function Home() {
   const [charity, setCharity] = useState<Profile | null>(null);
