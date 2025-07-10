@@ -7,10 +7,12 @@ import Footer from "../components/Footer";
 import RandomProfileButton from "../components/RandomProfileOverlay";
 import CategoryCard from "../components/CategoryCard";
 import { Profile, Category } from '../types';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faHandHoldingHeart, faMosque, faBook } from '@fortawesome/free-solid-svg-icons';
+import ArabicSlider from '../components/ArabicSlider';
+import { useLanguage } from '../components/LanguageContext';
+import StatsCards from '../components/StatsCards';
 
 export default function Home() {
+  const { language } = useLanguage();
   const [charity, setCharity] = useState<Profile | null>(null);
   const [mosque, setMosque] = useState<Profile | null>(null);
   const [isLoading, setIsLoading] = useState(true);
@@ -35,6 +37,27 @@ export default function Home() {
     name: 'Mosques',
     description: 'Mosques around the world.',
     profileCount: mosqueCount
+  };
+
+  const translations = {
+    en: {
+      welcome: 'Welcome to Sanabel!',
+      intro: 'Discover and support inspiring charities, learn about mosques around the world, learn about Islam, and discover many online libraries offering enriching books from around the world.',
+      charities: 'Charities',
+      mosques: 'Mosques',
+      libraries: 'Libraries',
+      discover: 'Discover Something New',
+      random: "Can't decide what to explore? Let us surprise you with a random charity to support or a beautiful mosque to discover. Every click opens a new opportunity to make a difference or learn something amazing.",
+    },
+    ar: {
+      welcome: 'مرحبًا بكم في سنابل',
+      intro: 'اكتشف وادعم الجمعيات الخيرية الملهمة، وتعرف على المساجد حول العالم، وتعلم عن الإسلام، واكتشف العديد من المكتبات الإلكترونية التي تقدم كتبًا غنية من جميع أنحاء العالم.',
+      charities: 'الجمعيات الخيرية',
+      mosques: 'المساجد',
+      libraries: 'المكتبات',
+      discover: 'اكتشف شيئًا جديدًا',
+      random: 'لا تستطيع أن تقرر ماذا تستكشف؟ دعنا نفاجئك بجمعية خيرية عشوائية لدعمها أو مسجد جميل لاكتشافه. كل نقرة تفتح فرصة جديدة لإحداث فرق أو تعلم شيء مذهل.',
+    }
   };
 
   // Fetch initial charity and mosque on component mount
@@ -123,50 +146,33 @@ export default function Home() {
   };
 
 
-
   return (
     <div className="flex flex-col min-h-screen bg-white dark:bg-black">
       <NavBar />
       {/* Motivating Intro Section */}
       <section className="w-full bg-gradient-to-b from-gray-100 to-white dark:from-black dark:to-gray-900 py-10 px-4 flex flex-col items-center text-center border-b border-gray-200 dark:border-gray-800">
-        <h1 className="text-4xl md:text-5xl font-extrabold text-black dark:text-white mb-4 drop-shadow-lg">Welcome to Charritos!</h1>
+        <h1 className="text-4xl md:text-5xl font-extrabold text-black dark:text-white mb-4 drop-shadow-lg">{translations[language].welcome}</h1>
         <p className="text-lg md:text-xl text-gray-700 dark:text-gray-200 max-w-2xl mb-6">
-          Discover and support inspiring <span className="font-semibold text-black dark:text-white">charities</span>, learn about <span className="font-semibold text-black dark:text-white">mosques</span> around the world, learn about Islam, and discover many online libraries offering enriching <span className="font-semibold text-black dark:text-white">books</span> from around the world.
+          {translations[language].intro}
         </p>
-        <div className="flex flex-wrap justify-center gap-6 mt-2">
-          <div className="bg-white dark:bg-black rounded-lg shadow px-6 py-4 border border-gray-200 dark:border-gray-800 flex flex-col items-center">
-            <span className="text-2xl font-bold text-black dark:text-white">
-              <motion.span animate={{}}>{animatedCharity}</motion.span>
-            </span>
-            <div className="text-gray-700 dark:text-gray-300 text-sm flex items-center gap-2 mt-1">
-              <FontAwesomeIcon icon={faHandHoldingHeart} className="w-5 h-5" /> Charities
-            </div>
-          </div>
-          <div className="bg-white dark:bg-black rounded-lg shadow px-6 py-4 border border-gray-200 dark:border-gray-800 flex flex-col items-center">
-            <span className="text-2xl font-bold text-black dark:text-white">
-              <motion.span animate={{}}>{animatedMosque}</motion.span>
-            </span>
-            <div className="text-gray-700 dark:text-gray-300 text-sm flex items-center gap-2 mt-1">
-              <FontAwesomeIcon icon={faMosque} className="w-5 h-5" /> Mosques
-            </div>
-          </div>
-          <div className="bg-white dark:bg-black rounded-lg shadow px-6 py-4 border border-gray-200 dark:border-gray-800 flex flex-col items-center">
-            <span className="text-2xl font-bold text-black dark:text-white">
-              <motion.span animate={{}}>{animatedBook}</motion.span>
-            </span>
-            <div className="text-gray-700 dark:text-gray-300 text-sm flex items-center gap-2 mt-1">
-              <FontAwesomeIcon icon={faBook} className="w-5 h-5" /> Libraries
-            </div>
-          </div>
-        </div>
+        <StatsCards
+          animatedCharity={animatedCharity}
+          animatedMosque={animatedMosque}
+          animatedBook={animatedBook}
+          translations={{
+            charities: translations[language].charities,
+            mosques: translations[language].mosques,
+            libraries: translations[language].libraries,
+          }}
+        />
       </section>
+      <ArabicSlider />
       <motion.main 
         className="flex flex-1 flex-col items-center justify-center gap-8 p-4"
         variants={containerVariants}
         initial="hidden"
         animate="visible"
       >
-
         <AnimatePresence mode="wait">
           {isLoading ? (
             <motion.div
@@ -221,35 +227,33 @@ export default function Home() {
           )}
         </AnimatePresence>
       </motion.main>
-
       {/* Random Cards Section at Bottom */}
       <section className="w-full bg-gray-100 dark:bg-black py-12 px-4">
         <div className="max-w-6xl mx-auto">
           <div className="text-center mb-8">
             <h2 className="text-3xl md:text-4xl font-bold text-black dark:text-white mb-4">
-             Too Tired? Pick Randomly!
+              {translations[language].discover}
             </h2>
             <p className="text-lg text-gray-700 dark:text-gray-300 max-w-2xl mx-auto">
-              Can&apos;t decide what to explore? Let us surprise you with a random charity or mosque to support. Every click opens a new opportunity to make a difference. Click on the buttons below to pick a new charity or mosque randomly.
+              {translations[language].random}
             </p>
           </div>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
-              <div className="w-full">
-                <RandomProfileButton 
-                  category="Charities" 
-                  initialProfile={charity}
-                />
-              </div>
-              <div className="w-full">
-                <RandomProfileButton 
-                  category="Mosques" 
-                  initialProfile={mosque}
-                />
-              </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
+            <div className="w-full">
+              <RandomProfileButton 
+                category={translations[language].charities} 
+                initialProfile={charity}
+              />
             </div>
+            <div className="w-full">
+              <RandomProfileButton 
+                category={translations[language].mosques} 
+                initialProfile={mosque}
+              />
+            </div>
+          </div>
         </div>
       </section>
-
       <Footer />
     </div>
   );

@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import "./globals.css";
+import { LanguageProvider } from '../components/LanguageContext';
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -18,17 +19,13 @@ export const metadata: Metadata = {
   description: "Discover charities, educators, and useful resources.",
 };
 
-export default function RootLayout({
-  children,
-}: Readonly<{
-  children: React.ReactNode;
-}>) {
+export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en">
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-      >
-        {children}
+      <body>
+        <LanguageProvider>
+          {children}
+        </LanguageProvider>
         <SpeedInsights />
       </body>
     </html>
