@@ -5,8 +5,11 @@ import NavBar from '../../components/NavBar';
 import Footer from '../../components/Footer';
 import CategoryCard from '../../components/CategoryCard';
 import { Category } from '../../types';
+import { useLanguage } from '../../components/LanguageContext';
+import translations from '../../components/translations';
 
 const CategoriesPage = () => {
+    const { language } = useLanguage();
     const [categories, setCategories] = useState<Category[]>([]);
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
@@ -29,14 +32,14 @@ const CategoriesPage = () => {
                 setCategories(data);
             } catch (error) {
                 console.error('Error fetching categories:', error);
-                setError('Failed to load categories');
+                setError(translations[language].categoriesError);
             } finally {
                 setIsLoading(false);
             }
         };
 
         fetchCategories();
-    }, []);
+    }, [language]);
 
     return (
         <div className="min-h-screen flex flex-col items-center bg-white dark:bg-black text-black dark:text-white font-inter">
@@ -44,7 +47,7 @@ const CategoriesPage = () => {
 
             <main className="flex-grow container mx-auto p-8">
                 <h1 className="text-4xl font-extrabold text-center text-black dark:text-white mb-12 drop-shadow-lg">
-                    All Categories
+                    {translations[language].allCategories}
                 </h1>
 
                 {isLoading ? (
@@ -57,7 +60,7 @@ const CategoriesPage = () => {
                     </p>
                 ) : categories.length === 0 ? (
                     <p className="text-center text-black dark:text-white text-lg my-8">
-                        No categories found.
+                        {translations[language].noCategories}
                     </p>
                 ) : (
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-6">

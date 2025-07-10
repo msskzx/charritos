@@ -7,6 +7,8 @@ import Footer from '../../../components/Footer';
 import { Profile, Link as LinkType } from '../../../types';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faLocationDot } from '@fortawesome/free-solid-svg-icons';
+import { useLanguage } from '../../../components/LanguageContext';
+import translations from '../../../components/translations';
 
 interface PageProps {
     params: Promise<{
@@ -16,6 +18,7 @@ interface PageProps {
 
 // Main Profile Detail Page Component
 const ProfileDetailPage = ({ params }: PageProps) => {
+    const { language } = useLanguage();
     const [profile, setProfile] = useState<Profile | null>(null);
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
@@ -101,7 +104,7 @@ const ProfileDetailPage = ({ params }: PageProps) => {
                         href="/profiles" 
                         className="text-black dark:text-white hover:underline"
                     >
-                        ← Back to All Profiles
+                        ← {translations[language].backToProfiles}
                     </Link>
                 </div>
 

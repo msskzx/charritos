@@ -6,6 +6,8 @@ import NavBar from '../../../components/NavBar';
 import Footer from '../../../components/Footer';
 import ProfileCard from '../../../components/ProfileCard';
 import { Category } from '../../../types';
+import { useLanguage } from '../../../components/LanguageContext';
+import translations from '../../../components/translations';
 
 interface PageProps {
     params: Promise<{
@@ -15,6 +17,7 @@ interface PageProps {
 
 // Main Category Page Component
 const CategoryPage = ({ params }: PageProps) => {
+    const { language } = useLanguage();
     const [category, setCategory] = useState<Category | null>(null);
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
@@ -100,7 +103,7 @@ const CategoryPage = ({ params }: PageProps) => {
                         href="/categories" 
                         className="text-black dark:text-white hover:underline"
                     >
-                        ← Back to Categories
+                        ← {translations[language].backToCategories}
                     </Link>
                 </div>
 

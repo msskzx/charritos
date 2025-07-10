@@ -4,19 +4,7 @@ import LanguageSwitcher from './LanguageSwitcher';
 import { useLanguage } from './LanguageContext';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faBars, faXmark } from '@fortawesome/free-solid-svg-icons';
-
-const translations = {
-  en: {
-    title: 'Sanabel',
-    categories: 'Categories',
-    profiles: 'Profiles',
-  },
-  ar: {
-    title: 'سنابل',
-    categories: 'التصنيفات',
-    profiles: 'الملفات',
-  },
-};
+import translations from './translations';
 
 const NavBar: React.FC = () => {
   const { language } = useLanguage();

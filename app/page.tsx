@@ -10,6 +10,7 @@ import { Profile, Category } from '../types';
 import ArabicSlider from '../components/ArabicSlider';
 import { useLanguage } from '../components/LanguageContext';
 import StatsCards from '../components/StatsCards';
+import translations from '../components/translations';
 
 export default function Home() {
   const { language } = useLanguage();
@@ -37,27 +38,6 @@ export default function Home() {
     name: 'Mosques',
     description: 'Mosques around the world.',
     profileCount: mosqueCount
-  };
-
-  const translations = {
-    en: {
-      welcome: 'Welcome to Sanabel!',
-      intro: 'Discover and support inspiring charities, learn about mosques around the world, learn about Islam, and discover many online libraries offering enriching books from around the world.',
-      charities: 'Charities',
-      mosques: 'Mosques',
-      libraries: 'Libraries',
-      discover: 'Discover Something New',
-      random: "Can't decide what to explore? Let us surprise you with a random charity to support or a beautiful mosque to discover. Every click opens a new opportunity to make a difference or learn something amazing.",
-    },
-    ar: {
-      welcome: 'مرحبًا بكم في سنابل',
-      intro: 'اكتشف وادعم الجمعيات الخيرية الملهمة، وتعرف على المساجد حول العالم، وتعلم عن الإسلام، واكتشف العديد من المكتبات الإلكترونية التي تقدم كتبًا غنية من جميع أنحاء العالم.',
-      charities: 'الجمعيات الخيرية',
-      mosques: 'المساجد',
-      libraries: 'المكتبات',
-      discover: 'اكتشف شيئًا جديدًا',
-      random: 'لا تستطيع أن تقرر ماذا تستكشف؟ دعنا نفاجئك بجمعية خيرية عشوائية لدعمها أو مسجد جميل لاكتشافه. كل نقرة تفتح فرصة جديدة لإحداث فرق أو تعلم شيء مذهل.',
-    }
   };
 
   // Fetch initial charity and mosque on component mount

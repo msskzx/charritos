@@ -7,10 +7,13 @@ import ProfileCard from '../../components/ProfileCard';
 import { Profile } from '../../types';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faChevronLeft, faChevronRight, faSearch } from '@fortawesome/free-solid-svg-icons';
+import { useLanguage } from '../../components/LanguageContext';
+import translations from '../../components/translations';
 
 const PAGE_SIZE = 12;
 
 const ProfilesPage = () => {
+    const { language } = useLanguage();
     const [profiles, setProfiles] = useState<Profile[]>([]);
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
@@ -45,13 +48,13 @@ const ProfilesPage = () => {
                 setProfiles(data.profiles);
                 setTotal(data.total);
             } catch {
-                setError('Failed to load profiles');
+                setError(translations[language].profilesError);
             } finally {
                 setIsLoading(false);
             }
         };
         fetchProfiles();
-    }, [page, debouncedSearch]);
+    }, [page, debouncedSearch, language]);
 
     const totalPages = Math.ceil(total / PAGE_SIZE);
 
@@ -67,10 +70,10 @@ const ProfilesPage = () => {
 
             <main className="flex-grow container mx-auto p-8">
                 <h1 className="text-4xl font-extrabold text-center text-black dark:text-white mb-2 drop-shadow-lg">
-                    All Profiles
+                    {translations[language].allProfiles}
                 </h1>
                 <div className="text-center text-gray-600 dark:text-gray-300 mb-10">
-                    {total} profile{total === 1 ? '' : 's'} found
+                    {translations[language].profilesFound(total)}
                 </div>
 
                 {/* Search Bar */}
@@ -79,7 +82,7 @@ const ProfilesPage = () => {
                         <input
                             type="text"
                             className="block w-full pr-12 py-2 pl-3 rounded border border-gray-300 dark:border-gray-700 bg-white dark:bg-black text-black dark:text-white focus:outline-none focus:ring-2 focus:ring-black dark:focus:ring-white"
-                            placeholder="Search"
+                            placeholder={translations[language].searchPlaceholder}
                             value={search}
                             onChange={e => setSearch(e.target.value)}
                             onKeyDown={e => { if (e.key === 'Enter') handleSearchClick(); }}
@@ -87,7 +90,7 @@ const ProfilesPage = () => {
                         <button
                             className="absolute right-2 top-1/2 -translate-y-1/2 p-2 rounded hover:bg-gray-200 dark:hover:bg-gray-800 transition-colors"
                             onClick={handleSearchClick}
-                            aria-label="Search"
+                            aria-label={translations[language].searchPlaceholder}
                         >
                             <FontAwesomeIcon icon={faSearch} />
                         </button>
@@ -104,7 +107,7 @@ const ProfilesPage = () => {
                     </p>
                 ) : profiles.length === 0 ? (
                     <p className="text-center text-black dark:text-white text-lg my-8">
-                        No profiles found.
+                        {translations[language].noProfiles}
                     </p>
                 ) : (
                     <>
@@ -120,16 +123,16 @@ const ProfilesPage = () => {
                                 className="px-4 py-2 rounded bg-black dark:bg-white text-white dark:text-black disabled:opacity-50 transition-colors hover:bg-gray-800 dark:hover:bg-gray-200"
                                 onClick={() => setPage(page - 1)}
                                 disabled={page === 1}
-                                aria-label="Previous Page"
+                                aria-label={translations[language].prev}
                             >
                                 <FontAwesomeIcon icon={faChevronLeft} />
                             </button>
-                            <span className="mx-2">Page {page} of {totalPages}</span>
+                            <span className="mx-2">{translations[language].pageOf(page, totalPages)}</span>
                             <button
                                 className="px-4 py-2 rounded bg-black dark:bg-white text-white dark:text-black disabled:opacity-50 transition-colors hover:bg-gray-800 dark:hover:bg-gray-200"
                                 onClick={() => setPage(page + 1)}
                                 disabled={page === totalPages}
-                                aria-label="Next Page"
+                                aria-label={translations[language].next}
                             >
                                 <FontAwesomeIcon icon={faChevronRight} />
                             </button>
