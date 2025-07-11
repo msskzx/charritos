@@ -23,7 +23,13 @@ export async function GET(
       where: { name: categoryName },
       include: {
         profiles: {
-          include: {
+          select: {
+            id: true,
+            name: true,
+            username: true,
+            description: true,
+            imageUrl: true,
+            links: true,
             categories: {
               select: {
                 id: true,
@@ -61,6 +67,7 @@ export async function GET(
       profiles: category.profiles.map(profile => ({
         id: profile.id,
         name: profile.name,
+        username: profile.username,
         description: profile.description,
         imageUrl: profile.imageUrl,
         links: profile.links,

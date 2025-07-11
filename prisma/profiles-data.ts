@@ -1,6 +1,7 @@
 export const profiles = [
   {
     name: 'UNRWA',
+    username: 'unrwa',
     description: 'United Nations Relief and Works Agency for Palestine Refugees in the Near East.',
     imageUrl: null,
     links: [
@@ -11,6 +12,7 @@ export const profiles = [
   },
   {
     name: 'Red Cross',
+    username: 'red-cross',
     description: 'International humanitarian organization providing emergency assistance and disaster relief.',
     imageUrl: null,
     links: [
@@ -21,6 +23,7 @@ export const profiles = [
   },
   {
     name: 'UNICEF',
+    username: 'unicef',
     description: 'United Nations agency providing humanitarian and developmental aid to children worldwide.',
     imageUrl: null,
     links: [
@@ -31,6 +34,7 @@ export const profiles = [
   },
   {
     name: 'Islamic Relief',
+    username: 'islamic-relief',
     description: 'Islamic relief organization providing humanitarian aid to communities in need.',
     imageUrl: null,
     links: [
@@ -41,6 +45,7 @@ export const profiles = [
   },
   {
     name: 'One Ummah',
+    username: 'one-ummah',
     description: 'One Ummah is a global movement of Muslims working together to build a more just and peaceful world.',
     imageUrl: null,
     links: [
@@ -51,6 +56,7 @@ export const profiles = [
   },
   {
     name: 'Sapience Institute',
+    username: 'sapience-institute',
     description: 'Sapience Institute is a non-profit organization that provides education and resources for Muslims.',
     imageUrl: null,
     links: [
@@ -61,6 +67,7 @@ export const profiles = [
   },
   {
     name: 'World Health Organization',
+    username: 'who',
     description: 'Specialized agency of the United Nations responsible for international public health.',
     imageUrl: null,
     links: [
@@ -71,6 +78,7 @@ export const profiles = [
   },
   {
     name: 'Islam Net',
+    username: 'islam-net',
     description: 'The organization aims to establish mosques and Islamic centers that provide Dawah and Islamic education.',
     imageUrl: null,
     links: [
@@ -80,6 +88,7 @@ export const profiles = [
   },
   {
     name: 'Project Gutenberg',
+    username: 'project-gutenberg',
     description: 'Project Gutenberg offers over 60,000 free eBooks, focusing on older works for which U.S. copyright has expired.',
     imageUrl: null,
     links: [
@@ -89,6 +98,7 @@ export const profiles = [
   },
   {
     name: 'Internet Archive',
+    username: 'internet-archive',
     description: 'The Internet Archive provides free access to millions of books, movies, software, music, and websites.',
     imageUrl: null,
     links: [
@@ -98,6 +108,7 @@ export const profiles = [
   },
   {
     name: 'LibriVox',
+    username: 'librivox',
     description: 'LibriVox provides free audiobooks from the public domain, read by volunteers from around the world.',
     imageUrl: null,
     links: [

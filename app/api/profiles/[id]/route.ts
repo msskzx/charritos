@@ -15,19 +15,21 @@ export async function GET(
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const { id } = await params;
+    const { id: username } = await params;
 
-    // Get the profile with its categories
+    // Get the profile with its categories using username as the identifier
     const profile = await prisma.profile.findUnique({
-      where: { id },
+      where: { username: String(username) },
       select: {
         id: true,
         name: true,
+        username: true,
         description: true,
         imageUrl: true,
         city: true,
         country: true,
         links: true,
+        donation: true,
         categories: {
           select: {
             id: true,
@@ -48,6 +50,7 @@ export async function GET(
     const response = {
       id: profile.id,
       name: profile.name,
+      username: profile.username,
       description: profile.description,
       imageUrl: profile.imageUrl,
       city: profile.city,

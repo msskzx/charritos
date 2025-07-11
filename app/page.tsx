@@ -221,13 +221,13 @@ export default function Home() {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
             <div className="w-full">
               <RandomProfileButton 
-                category={translations[language].charities} 
+                category="Charities"
                 initialProfile={charity}
               />
             </div>
             <div className="w-full">
               <RandomProfileButton 
-                category={translations[language].mosques} 
+                category="Mosques"
                 initialProfile={mosque}
               />
             </div>

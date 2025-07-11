@@ -11,7 +11,7 @@ const translations = {
     mosques: 'Mosques',
     libraries: 'Libraries',
     discover: 'Discover Something New',
-    random: "Can't decide what to explore? Let us surprise you with a random charity to support or a beautiful mosque to discover. Every click opens a new opportunity to make a difference or learn something amazing.",
+    random: "Can't decide what to explore? Let us surprise you with a random charity to support or a beautiful mosque to support. Every click opens a new opportunity to make a difference or learn something amazing.",
     // All Profiles
     allProfiles: 'All Profiles',
     profilesFound: (total: number) => `${total} profile${total === 1 ? '' : 's'} found`,
@@ -27,7 +27,7 @@ const translations = {
     categoriesError: 'Failed to load categories',
     // Breadcrumbs
     backToCategories: 'Back to Categories',
-    backToProfiles: 'Back to All Profiles',
+    backToProfiles: 'Back to Profiles',
   },
   ar: {
     // NavBar
@@ -36,12 +36,12 @@ const translations = {
     profiles: 'الملفات الشخصية',
     // Homepage
     welcome: 'مرحبًا بكم في سنابل',
-    intro: 'اكتشف وادعم الجمعيات الخيرية الملهمة، وتعرف على المساجد حول العالم، وتعلم عن الإسلام، واكتشف العديد من المكتبات الإلكترونية التي تقدم كتبًا غنية من جميع أنحاء العالم.',
+    intro: '.اكتشف وادعم الجمعيات الخيرية الملهمة، وتعرف على المساجد حول العالم، وتعلم عن الإسلام، واكتشف العديد من المكتبات الإلكترونية التي تقدم كتبًا غنية من جميع أنحاء العالم.',
     charities: 'الجمعيات الخيرية',
     mosques: 'المساجد',
     libraries: 'المكتبات',
     discover: 'اكتشف شيئًا جديدًا',
-    random: 'لا تستطيع أن تقرر ماذا تستكشف؟ دعنا نفاجئك بجمعية خيرية عشوائية لدعمها أو مسجد جميل لاكتشافه. كل نقرة تفتح فرصة جديدة لإحداث فرق أو تعلم شيء مذهل.',
+    random: '.لا تستطيع أن تقرر ماذا تستكشف؟ دعنا نفاجئك بجمعية خيرية عشوائية لدعمها أو مسجد جميل لاكتشافه. كل نقرة تفتح فرصة جديدة لإحداث فرق أو تعلم شيء مذهل.',
     // All Profiles
     allProfiles: 'جميع الملفات الشخصية',
     profilesFound: (total: number) => `تم العثور على ${total} ملف شخصي`,

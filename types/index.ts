@@ -1,6 +1,7 @@
 export interface Profile {
   id: string;
   name: string;
+  username?: string;
   description: string | null;
   imageUrl: string | null;
   city?: string | null;
@@ -10,6 +11,7 @@ export interface Profile {
     id: string;
     name: string;
   }[];
+  donation?: string | null;
 }
 
 export interface Category {

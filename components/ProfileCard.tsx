@@ -7,7 +7,7 @@ import { faLocationDot } from '@fortawesome/free-solid-svg-icons';
 const ProfileCard: React.FC<{ profile: Profile }> = ({ profile }) => {
     return (
         <Link
-            href={`/profiles/${profile.id}`}
+            href={`/profiles/${profile.username}`}
             className="group block p-6 bg-white dark:bg-black rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300 transform hover:scale-105 ease-in-out border border-black dark:border-white h-80 flex flex-col relative overflow-hidden"
         >
             <div className="flex flex-col items-center mb-4 group-hover:opacity-0 transition-opacity duration-200">

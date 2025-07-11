@@ -74,6 +74,7 @@ const getRandomCharity = async (): Promise<Profile | null> => {
     return {
       id: randomCharity.id,
       name: randomCharity.name,
+      username: randomCharity.username,
       description: randomCharity.description,
       imageUrl: randomCharity.imageUrl,
       links: randomCharity.links,

@@ -27,12 +27,14 @@
     // Model for Profiles
     model Profile {
       id          String    @id @default(uuid()) @map("id") @db.Uuid // Unique ID for each profile
-      name        String    @unique // Name of the person, channel, website etc.
+      name        String    // No longer unique
+      username    String?   @unique // New unique username/slug
       imageUrl    String?   @map("image_url") // URL for the profile's image, optional
       description String?   // Detailed description of the profile, optional
       city        String?   // City where the profile is located, optional
       country     String?   // Country where the profile is located, optional
       links       Json?     @db.JsonB // Store an array of objects for links (e.g., [{"name": "Website", "url": "https://example.com"}]), optional
+      donation    String?   // New field for donation info
       createdAt   DateTime  @default(now()) @map("created_at") // Timestamp for creation
       updatedAt   DateTime  @updatedAt @map("updated_at") // Timestamp for last update
 

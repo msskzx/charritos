@@ -74,6 +74,7 @@ const getRandomProfile = async (category: string): Promise<Profile | null> => {
     return {
       id: randomProfile.id,
       name: randomProfile.name,
+      username: randomProfile.username,
       description: randomProfile.description,
       imageUrl: randomProfile.imageUrl,
       city: randomProfile.city,

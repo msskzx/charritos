@@ -1,6 +1,7 @@
 export const profiles = [
   {
     name: 'Islamisches Zentrum München',
+    username: 'islamisches-zentrum-munchen',
     description: 'Islamisches Zentrum München is a mosque in Munich, Germany.',
     imageUrl: null,
     city: 'Munich',
@@ -12,6 +13,7 @@ export const profiles = [
   },
   {
     name: 'Marokkanischer Verein e.V.',
+    username: 'marokkanischer-verein-ev',
     description: 'Marokkanischer Verein e.V. is a mosque in Munich, Germany.',
     imageUrl: null,
     city: 'Munich',
@@ -24,6 +26,7 @@ export const profiles = [
   },
   {
     name: 'Central Mosque of London',
+    username: 'central-mosque-of-london',
     description: 'The Central Mosque of London, also known as the London Central Mosque, serves the Muslim community in London.',
     imageUrl: null,
     city: 'London',
@@ -36,6 +39,7 @@ export const profiles = [
   },
   {
     name: 'Islamic Center of Washington',
+    username: 'islamic-center-of-washington',
     description: 'The Islamic Center of Washington in Washington, D.C., is one of the largest mosques in the United States.',
     imageUrl: null,
     city: 'Washington',
@@ -48,12 +52,25 @@ export const profiles = [
   },
   {
     name: 'Islamic Cultural Center of New York',
+    username: 'islamic-cultural-center-of-new-york',
     description: 'The Islamic Cultural Center of New York is a mosque and cultural center serving the Muslim community in New York City.',
     imageUrl: null,
     city: 'New York',
     country: 'United States',
     links: [
       { name: 'Official Site', url: 'https://www.icnyc.org/' }
+    ],
+    categoryNames: ['Mosques']
+  },
+  {
+    name: 'مسجد زاد التقوي',
+    username: 'مسجد-زاد-التقوي',
+    description: 'مسجد تقام فيه الصلوات و الجمعه',
+    imageUrl: null,
+    city: 'كفر الزيات',
+    country: 'مصر',
+    links: [
+      { name: 'Facebook', url: '' }
     ],
     categoryNames: ['Mosques']
   }

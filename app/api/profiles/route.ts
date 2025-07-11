@@ -18,11 +18,13 @@ const getProfiles = async (page: number, limit: number): Promise<{profiles: Prof
       select: {
         id: true,
         name: true,
+        username: true,
         description: true,
         imageUrl: true,
         city: true,
         country: true,
         links: true,
+        donation: true,
         categories: {
           select: {
             id: true,
@@ -41,11 +43,13 @@ const getProfiles = async (page: number, limit: number): Promise<{profiles: Prof
       profiles: profiles.map(profile => ({
         id: profile.id,
         name: profile.name,
+        username: profile.username,
         description: profile.description,
         imageUrl: profile.imageUrl,
         city: profile.city,
         country: profile.country,
         links: profile.links,
+        donation: profile.donation,
         categories: profile.categories
       })),
       total
@@ -66,15 +70,17 @@ export async function GET(req: NextRequest) {
       const where = { name: { contains: search, mode: 'insensitive' as const } };
       const total = await prisma.profile.count({ where });
       const profiles = await prisma.profile.findMany({
-        where,
+      where,
         select: {
           id: true,
           name: true,
+          username: true,
           description: true,
           imageUrl: true,
           city: true,
           country: true,
           links: true,
+          donation: true,
           categories: {
             select: {
               id: true,
