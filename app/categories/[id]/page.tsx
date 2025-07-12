@@ -8,6 +8,7 @@ import ProfileCard from '../../../components/ProfileCard';
 import { Category } from '../../../types';
 import { useLanguage } from '../../../components/LanguageContext';
 import translations from '../../../components/translations';
+import CategoryIcon from '../../../components/CategoryIcon';
 
 interface PageProps {
     params: Promise<{
@@ -111,7 +112,7 @@ const CategoryPage = ({ params }: PageProps) => {
                 {category && (
                     <div className="text-center mb-12">
                         <div className="w-24 h-24 flex items-center justify-center rounded-full bg-black dark:bg-white text-white dark:text-black text-5xl font-bold mx-auto mb-4">
-                            {category.name.charAt(0)}
+                            <CategoryIcon category={category} className="text-4xl" />
                         </div>
                         <h1 className="text-4xl font-extrabold text-black dark:text-white mb-4 drop-shadow-lg">
                             {category.name}

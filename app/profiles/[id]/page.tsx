@@ -9,6 +9,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faLocationDot } from '@fortawesome/free-solid-svg-icons';
 import { useLanguage } from '../../../components/LanguageContext';
 import translations from '../../../components/translations';
+import ProfileIcon from '../../../components/ProfileIcon';
 
 interface PageProps {
     params: Promise<{
@@ -111,10 +112,7 @@ const ProfileDetailPage = ({ params }: PageProps) => {
                 {/* Profile Header */}
                 <div className="text-center mb-12">
                     <div className="w-32 h-32 flex items-center justify-center rounded-full bg-black dark:bg-white text-white dark:text-black text-6xl font-bold mx-auto mb-6">
-                        {profile.name.split(' ').length >= 2 
-                            ? profile.name.split(' ').slice(0, 2).map(word => word.charAt(0)).join('').toUpperCase()
-                            : profile.name.charAt(0).toUpperCase()
-                        }
+                        <ProfileIcon profile={profile} className="text-5xl" />
                     </div>
                     <h1 className="text-5xl font-extrabold text-black dark:text-white mb-4 drop-shadow-lg">
                         {profile.name}

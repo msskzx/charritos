@@ -23,7 +23,7 @@ const ArabicSlider: React.FC = () => {
   useEffect(() => {
     const timer = setInterval(() => {
       setIndex((prev) => (prev + 1) % arabicSentences.length);
-    }, 5000);
+    }, 10000);
     return () => clearInterval(timer);
   }, []);
 

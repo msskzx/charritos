@@ -3,8 +3,10 @@ import React from 'react';
 import { Profile } from '../types';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faLocationDot } from '@fortawesome/free-solid-svg-icons';
+import ProfileIcon from './ProfileIcon';
 
 const ProfileCard: React.FC<{ profile: Profile }> = ({ profile }) => {
+
     return (
         <Link
             href={`/profiles/${profile.username}`}
@@ -12,10 +14,7 @@ const ProfileCard: React.FC<{ profile: Profile }> = ({ profile }) => {
         >
             <div className="flex flex-col items-center mb-4 group-hover:opacity-0 transition-opacity duration-200">
                 <div className="w-20 h-20 flex items-center justify-center rounded-full bg-black dark:bg-white text-white dark:text-black text-4xl font-bold mb-3">
-                    {profile.name.split(' ').length >= 2
-                        ? profile.name.split(' ').slice(0, 2).map(word => word.charAt(0)).join('').toUpperCase()
-                        : profile.name.charAt(0).toUpperCase()
-                    }
+                    <ProfileIcon profile={profile} />
                 </div>
             </div>
             <h2 className="text-2xl font-bold text-black dark:text-white mb-2 text-center group-hover:opacity-0 transition-opacity duration-200">{profile.name}</h2>
