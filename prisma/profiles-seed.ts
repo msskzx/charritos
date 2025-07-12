@@ -1,11 +1,15 @@
 import { PrismaClient } from '@prisma/client'
 import { profiles } from './profiles-data'
-// import { profiles } from './profiles-data-mosques'
 
 const prisma = new PrismaClient()
 
 async function main() {
   console.log('🌱 Starting profiles seed...')
+
+  // Delete all existing profiles first
+  console.log('🗑️  Deleting existing profiles...')
+  await prisma.profile.deleteMany({})
+  console.log('✅ All existing profiles deleted')
 
   // Get all categories to link profiles to them
   const categories = await prisma.category.findMany()
@@ -50,7 +54,7 @@ async function main() {
       console.log(`✅ Created profile: ${createdProfile.name} (Categories: ${createdProfile.categories.map(c => c.name).join(', ')})`)
 
     } catch (error) {
-      console.error(`❌ Error creating or processing profile "${profileData.name}"`)
+      console.error(`❌ Error creating or processing profile "${profileData.name}":`, error)
     }
   }
 

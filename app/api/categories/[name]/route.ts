@@ -60,7 +60,9 @@ export async function GET(
     const response = {
       id: category.id,
       name: category.name,
+      nameAr: (category as any).nameAr,
       description: category.description,
+      descriptionAr: (category as any).descriptionAr,
       imageUrl: category.imageUrl,
       createdAt: category.createdAt,
       profileCount: category._count.profiles,

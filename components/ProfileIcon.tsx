@@ -13,9 +13,9 @@ const ProfileIcon: React.FC<ProfileIconProps> = ({ profile, className = "text-3x
     const getProfileIcon = (categories: Profile['categories']) => {
         const categoryNames = categories.map(cat => cat.name.toLowerCase());
         
-        if (categoryNames.includes('mosques')) {
+        if (categoryNames.includes('mosque')) {
             return faMosque;
-        } else if (categoryNames.includes('books')) {
+        } else if (categoryNames.includes('library')) {
             return faBook;
         }
         

@@ -8,7 +8,7 @@ export const profiles = [
       { name: 'Website', url: 'https://www.unrwa.org' },
       { name: 'Donate', url: 'https://www.unrwa.org/donate' }
     ],
-    categoryNames: ['Charities']
+    categoryNames: ['Charity']
   },
   {
     name: 'Red Cross',
@@ -19,7 +19,7 @@ export const profiles = [
       { name: 'Website', url: 'https://www.redcross.org' },
       { name: 'Donate', url: 'https://www.redcross.org/donate' }
     ],
-    categoryNames: ['Charities']
+    categoryNames: ['Charity']
   },
   {
     name: 'UNICEF',
@@ -30,7 +30,7 @@ export const profiles = [
       { name: 'Website', url: 'https://www.unicef.org' },
       { name: 'Donate', url: 'https://www.unicef.org/donate' }
     ],
-    categoryNames: ['Charities']
+    categoryNames: ['Charity']
   },
   {
     name: 'Islamic Relief',
@@ -41,7 +41,7 @@ export const profiles = [
       { name: 'Website', url: 'https://www.islamic-relief.org' },
       { name: 'Donate', url: 'https://www.islamic-relief.org/donate' }
     ],
-    categoryNames: ['Charities']
+    categoryNames: ['Charity']
   },
   {
     name: 'One Ummah',
@@ -52,7 +52,7 @@ export const profiles = [
       { name: 'Website', url: 'https://www.oneummah.org' },
       { name: 'Donate', url: 'https://www.oneummah.org/donate' }
     ],
-    categoryNames: ['Charities']
+    categoryNames: ['Charity']
   },
   {
     name: 'Sapience Institute',
@@ -63,7 +63,7 @@ export const profiles = [
       { name: 'Website', url: 'https://www.sapienceinstitute.org' },
       { name: 'Donate', url: 'https://www.sapienceinstitute.org/donate' }
     ],
-    categoryNames: ['Islam', 'Charities']
+    categoryNames: ['Islam', 'Charity']
   },
   {
     name: 'World Health Organization',
@@ -74,7 +74,7 @@ export const profiles = [
       { name: 'Website', url: 'https://www.who.int' },
       { name: 'Health Topics', url: 'https://www.who.int/health-topics' }
     ],
-    categoryNames: ['Charities']
+    categoryNames: ['Charity']
   },
   {
     name: 'Islam Net',
@@ -84,7 +84,7 @@ export const profiles = [
     links: [
       { name: 'Website', url: 'https://islamnet.com' },
     ],
-    categoryNames: ['Charities', 'Islam']
+    categoryNames: ['Charity', 'Islam']
   },
   {
     name: 'Project Gutenberg',
@@ -94,7 +94,7 @@ export const profiles = [
     links: [
       { name: 'Website', url: 'https://www.gutenberg.org' }
     ],
-    categoryNames: ['Books']
+    categoryNames: ['Library']
   },
   {
     name: 'Internet Archive',
@@ -104,7 +104,7 @@ export const profiles = [
     links: [
       { name: 'Website', url: 'https://archive.org' }
     ],
-    categoryNames: ['Books']
+    categoryNames: ['Library']
   },
   {
     name: 'LibriVox',
@@ -114,6 +114,82 @@ export const profiles = [
     links: [
       { name: 'Website', url: 'https://librivox.org' }
     ],
-    categoryNames: ['Books']
+    categoryNames: ['Library']
   }
+,{
+      name: 'Islamisches Zentrum München',
+      username: 'islamisches-zentrum-munchen',
+      description: 'Islamisches Zentrum München is a mosque in Munich, Germany.',
+      imageUrl: null,
+      city: 'Munich',
+      country: 'Germany',
+      links: [
+        { name: 'Website', url: 'https://www.islamisches-zentrum-muenchen.de/' }
+      ],
+      categoryNames: ['Mosque']
+    },
+    {
+      name: 'Marokkanischer Verein e.V.',
+      username: 'marokkanischer-verein-ev',
+      description: 'Marokkanischer Verein e.V. is a mosque in Munich, Germany.',
+      imageUrl: null,
+      city: 'Munich',
+      country: 'Germany',
+      links: [
+        { name: 'Website', url: 'https://www.mk-v.net/' },
+        { name: 'Donate', url: 'https://www.mk-v.net/spenden' }
+      ],
+      categoryNames: ['Mosque']
+    },
+    {
+      name: 'Central Mosque of London',
+      username: 'central-mosque-of-london',
+      description: 'The Central Mosque of London, also known as the London Central Mosque, serves the Muslim community in London.',
+      imageUrl: null,
+      city: 'London',
+      country: 'United Kingdom',
+      links: [
+        { name: 'Official Site', url: 'https://iccuk.org/' },
+        { name: 'Donate', url: 'https://www.iccuk.org/page2.php?section=donate&page=donate1' }
+      ],
+      categoryNames: ['Mosque']
+    },
+    {
+      name: 'Islamic Center of Washington',
+      username: 'islamic-center-of-washington',
+      description: 'The Islamic Center of Washington in Washington, D.C., is one of the largest mosques in the United States.',
+      imageUrl: null,
+      city: 'Washington',
+      country: 'United States',
+      links: [
+        { name: 'Official Site', url: 'https://www.theislamiccenter.com/'}
+  
+      ],
+      categoryNames: ['Mosque']
+    },
+    {
+      name: 'Islamic Cultural Center of New York',
+      username: 'islamic-cultural-center-of-new-york',
+      description: 'The Islamic Cultural Center of New York is a mosque and cultural center serving the Muslim community in New York City.',
+      imageUrl: null,
+      city: 'New York',
+      country: 'United States',
+      links: [
+        { name: 'Official Site', url: 'https://www.icnyc.org/' }
+      ],
+      categoryNames: ['Mosque']
+    },
+    {
+      name: 'مسجد زاد التقوي',
+      username: 'مسجد-زاد-التقوي',
+      description: 'مسجد تقام فيه الصلوات و الجمعه',
+      imageUrl: null,
+      city: 'كفر الزيات',
+      country: 'مصر',
+      links: [
+        { name: 'Facebook', url: '' }
+      ],
+      categoryNames: ['Mosque']
+    }
+  
 ]

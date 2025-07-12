@@ -24,21 +24,10 @@ export default function Home() {
   const [animatedCharity, setAnimatedCharity] = useState(0);
   const [animatedMosque, setAnimatedMosque] = useState(0);
   const [animatedBook, setAnimatedBook] = useState(0);
-
-  // Category data for the cards
-  const charitiesCategory = {
-    id: 'charities',
-    name: 'Charities',
-    description: 'Organizations making a positive difference.',
-    profileCount: charityCount
-  };
-
-  const mosquesCategory = {
-    id: 'mosques',
-    name: 'Mosques',
-    description: 'Mosques around the world.',
-    profileCount: mosqueCount
-  };
+  
+  // Category data for the cards - will be populated from API
+  const [charitiesCategory, setCharitiesCategory] = useState<Category | null>(null);
+  const [mosquesCategory, setMosquesCategory] = useState<Category | null>(null);
 
   // Fetch initial charity and mosque on component mount
   useEffect(() => {
@@ -48,15 +37,17 @@ export default function Home() {
         const categoriesResponse = await fetch('/api/categories');
         if (categoriesResponse.ok) {
           const categoriesData = await categoriesResponse.json();
-          const charitiesCategory = categoriesData.find((cat: Category) => cat.name === 'Charities');
-          const mosquesCategory = categoriesData.find((cat: Category) => cat.name === 'Mosques');
-          const booksCategory = categoriesData.find((cat: Category) => cat.name === 'Books');
+          const charitiesCategory = categoriesData.find((cat: Category) => cat.name === 'Charity');
+          const mosquesCategory = categoriesData.find((cat: Category) => cat.name === 'Mosque');
+          const booksCategory = categoriesData.find((cat: Category) => cat.name === 'Library');
           
           if (charitiesCategory) {
             setCharityCount(charitiesCategory.profileCount);
+            setCharitiesCategory(charitiesCategory);
           }
           if (mosquesCategory) {
             setMosqueCount(mosquesCategory.profileCount);
+            setMosquesCategory(mosquesCategory);
           }
           if (booksCategory) {
             setBookCount(booksCategory.profileCount);
@@ -64,14 +55,14 @@ export default function Home() {
         }
 
         // Fetch initial charity
-        const charityResponse = await fetch('/api/random-profile?category=Charities');
+        const charityResponse = await fetch('/api/random-profile?category=Charity');
         if (charityResponse.ok) {
           const charityData = await charityResponse.json();
           setCharity(charityData);
         }
 
         // Fetch initial mosque
-        const mosqueResponse = await fetch('/api/random-profile?category=Mosques');
+        const mosqueResponse = await fetch('/api/random-profile?category=Mosque');
         if (mosqueResponse.ok) {
           const mosqueData = await mosqueResponse.json();
           setMosque(mosqueData);
@@ -196,12 +187,16 @@ export default function Home() {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.5, ease: "easeOut" }}
               >
-                <div className="flex-1 max-w-md w-full">
-                  <CategoryCard category={charitiesCategory} />
-                </div>
-                <div className="flex-1 max-w-md w-full">
-                  <CategoryCard category={mosquesCategory} />
-                </div>
+                {charitiesCategory && (
+                  <div className="flex-1 max-w-md w-full">
+                    <CategoryCard category={charitiesCategory} />
+                  </div>
+                )}
+                {mosquesCategory && (
+                  <div className="flex-1 max-w-md w-full">
+                    <CategoryCard category={mosquesCategory} />
+                  </div>
+                )}
               </motion.div>
             </motion.div>
           )}
@@ -221,13 +216,13 @@ export default function Home() {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
             <div className="w-full">
               <RandomProfileButton 
-                category="Charities"
+                category="Charity"
                 initialProfile={charity}
               />
             </div>
             <div className="w-full">
               <RandomProfileButton 
-                category="Mosques"
+                category="Mosque"
                 initialProfile={mosque}
               />
             </div>

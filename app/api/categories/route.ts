@@ -29,7 +29,9 @@ const getCategories = async (): Promise<Category[]> => {
     return categories.map(category => ({
       id: category.id,
       name: category.name,
+      nameAr: category.nameAr,
       description: category.description,
+      descriptionAr: category.descriptionAr,
       profileCount: category._count.profiles
     }));
   } catch (error) {

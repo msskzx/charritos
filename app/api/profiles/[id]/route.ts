@@ -56,6 +56,7 @@ export async function GET(
       city: profile.city,
       country: profile.country,
       links: profile.links,
+      donation: profile.donation,
       categories: profile.categories
     };
 

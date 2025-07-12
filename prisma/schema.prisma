@@ -14,7 +14,9 @@
     model Category {
       id          String    @id @default(uuid()) @map("id") @db.Uuid // Use UUID for IDs
       name        String    @unique // Category name (e.g., 'Charities', 'History')
+      nameAr      String?   @map("name_ar") // Arabic name for the category
       description String?   // Description of the category, optional
+      descriptionAr String? @map("description_ar") // Arabic description of the category
       imageUrl    String?   @map("image_url") // Optional URL for a category image
       createdAt   DateTime  @default(now()) @map("created_at") // Timestamp for creation
 

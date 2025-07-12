@@ -13,11 +13,11 @@ const CategoryIcon: React.FC<CategoryIconProps> = ({ category, className = "text
     const getCategoryIcon = (categoryName: string) => {
         const name = categoryName.toLowerCase();
         
-        if (name.includes('mosques')) {
+        if (name.includes('mosque')) {
             return faMosque;
-        } else if (name.includes('charities')) {
+        } else if (name.includes('charity')) {
             return faHandHoldingHeart;
-        } else if (name.includes('books')) {
+        } else if (name.includes('library')) {
             return faBook;
         } else if (name.includes('islam')) {
             return faKaaba; // Using star icon for Islam category

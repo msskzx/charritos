@@ -15,9 +15,10 @@ export interface Profile {
 }
 
 export interface Category {
-  id: string;
   name: string;
+  nameAr?: string | null;
   description: string | null;
+  descriptionAr?: string | null;
   profileCount?: number;
   profiles?: Profile[];
 }

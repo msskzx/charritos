@@ -13,13 +13,13 @@ if (process.env.NODE_ENV !== 'production') globalForPrisma.prisma = prisma;
 
 const getRandomCharity = async (): Promise<Profile | null> => {
   try {
-    // First, check if the "Charities" category exists
+    // First, check if the "Charity" category exists
     const charityCategory = await prisma.category.findUnique({
-      where: { name: "Charities" }
+      where: { name: "Charity" }
     });
 
     if (!charityCategory) {
-      console.warn('Charities category not found in database');
+      console.warn('Charity category not found in database');
       return null;
     }
 
@@ -28,7 +28,7 @@ const getRandomCharity = async (): Promise<Profile | null> => {
       where: {
         categories: {
           some: {
-            name: "Charities"
+            name: "Charity"
           }
         }
       }
@@ -44,7 +44,7 @@ const getRandomCharity = async (): Promise<Profile | null> => {
       where: {
         categories: {
           some: {
-            name: "Charities"
+            name: "Charity"
           }
         }
       },
@@ -97,7 +97,7 @@ export async function GET() {
     
     if (!randomCharity) {
       return NextResponse.json(
-        { error: 'No charities found' },
+        { error: 'No charity found' },
         { status: 404 }
       );
     }

@@ -36,7 +36,7 @@ export default function RandomProfileButton({
     setError(null);
     
     try {
-      const response = await fetch(`/api/random-profile?category=${encodeURIComponent(category)}`, {
+      const response = await fetch(`/api/random-profile?category=${category}`, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',

@@ -6,7 +6,7 @@ import NavBar from '../../../components/NavBar';
 import Footer from '../../../components/Footer';
 import { Profile, Link as LinkType } from '../../../types';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faLocationDot } from '@fortawesome/free-solid-svg-icons';
+import { faLocationDot, faHandHoldingHeart } from '@fortawesome/free-solid-svg-icons';
 import { useLanguage } from '../../../components/LanguageContext';
 import translations from '../../../components/translations';
 import ProfileIcon from '../../../components/ProfileIcon';
@@ -29,7 +29,7 @@ const ProfileDetailPage = ({ params }: PageProps) => {
             try {
                 const { id } = await params;
                 
-                const response = await fetch(`/api/profiles/${encodeURIComponent(id)}`, {
+                const response = await fetch(`/api/profiles/${id}`, {
                     method: 'GET',
                     headers: {
                         'Content-Type': 'application/json',
@@ -38,7 +38,7 @@ const ProfileDetailPage = ({ params }: PageProps) => {
 
                 if (!response.ok) {
                     if (response.status === 404) {
-                        setError('Profile not found');
+                        setError(translations[language].profileNotFound);
                     } else {
                         throw new Error('Failed to fetch profile');
                     }
@@ -49,14 +49,14 @@ const ProfileDetailPage = ({ params }: PageProps) => {
                 setProfile(data);
             } catch (error) {
                 console.error('Error fetching profile:', error);
-                setError('Failed to load profile data');
+                setError(translations[language].failedToLoadProfile);
             } finally {
                 setIsLoading(false);
             }
         };
 
         fetchProfile();
-    }, [params]);
+    }, [params, language]);
 
     if (isLoading) {
         return (
@@ -79,13 +79,13 @@ const ProfileDetailPage = ({ params }: PageProps) => {
                 <main className="flex-grow container mx-auto p-8">
                     <div className="text-center">
                         <p className="text-red-600 dark:text-red-400 text-lg my-8">
-                            {error || 'Profile not found'}
+                            {error || translations[language].profileNotFound}
                         </p>
                         <Link 
                             href="/profiles" 
                             className="px-6 py-3 bg-black dark:bg-white text-white dark:text-black rounded-md hover:bg-gray-800 dark:hover:bg-gray-200 transition-colors"
                         >
-                            Back to All Profiles
+                            {translations[language].backToAllProfiles}
                         </Link>
                     </div>
                 </main>
@@ -120,19 +120,13 @@ const ProfileDetailPage = ({ params }: PageProps) => {
                     {(profile.city || profile.country) && (
                         <div className="flex items-center justify-center gap-2 text-lg text-gray-700 dark:text-gray-300 mb-2">
                             <span>
-                                <FontAwesomeIcon icon={faLocationDot} aria-label="location" />
+                                <FontAwesomeIcon icon={faLocationDot} aria-label={translations[language].location} />
                             </span>
                             <span>
                                 {profile.city}{profile.city && profile.country ? ', ' : ''}{profile.country}
                             </span>
                         </div>
                     )}
-                    {profile.description && (
-                        <p className="text-xl text-black dark:text-white max-w-3xl mx-auto mb-6">
-                            {profile.description}
-                        </p>
-                    )}
-                </div>
 
                 {/* Categories */}
                 {profile.categories && profile.categories.length > 0 && (
@@ -150,6 +144,27 @@ const ProfileDetailPage = ({ params }: PageProps) => {
                         </div>
                     </div>
                 )}
+                
+                    {profile.description && (
+                        <p className="text-xl text-black dark:text-white max-w-3xl mx-auto mb-6">
+                            {profile.description}
+                        </p>
+                    )}
+                    {profile.donation && (
+                        <div className="text-center mb-6">
+                            <div className="max-w-2xl mx-auto p-6 bg-white dark:bg-black rounded-lg shadow-md border border-black dark:border-white">
+                                <h3 className="text-2xl font-bold text-black dark:text-white mb-4 flex items-center justify-center gap-2">
+                                    <FontAwesomeIcon icon={faHandHoldingHeart} className="text-xl" />
+                                    {translations[language].donations}
+                                </h3>
+                                <div className="text-lg text-black dark:text-white">
+                                    {profile.donation}
+                                </div>
+                            </div>
+                        </div>
+                    )}
+                </div>
+
 
                 {/* Links */}
                 {profile.links && Array.isArray(profile.links) && profile.links.length > 0 && (

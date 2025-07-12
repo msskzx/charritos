@@ -2,8 +2,21 @@ import React from 'react';
 import Link from 'next/link';
 import { Category } from '../types';
 import CategoryIcon from './CategoryIcon';
+import { useLanguage } from './LanguageContext';
+import translations from './translations';
 
 const CategoryCard: React.FC<{category: Category}> = ({ category }) => {
+    const { language } = useLanguage();
+    
+    // Use Arabic translations if available and language is Arabic
+    const displayName = language === 'ar' && category.nameAr ? category.nameAr : category.name;
+    const displayDescription = language === 'ar' && category.descriptionAr ? category.descriptionAr : category.description;
+    
+    // Get profile count text based on language
+    const profileText = category.profileCount === 1 
+        ? translations[language].profileCount 
+        : translations[language].profileCountPlural;
+    
     return (
         <Link
             href={`/categories/${category.name}`}
@@ -14,15 +27,15 @@ const CategoryCard: React.FC<{category: Category}> = ({ category }) => {
                     <CategoryIcon category={category} />
                 </div>
             </div>
-            <h2 className="text-2xl font-bold text-black dark:text-white mb-2 text-center">{category.name}</h2>
+            <h2 className="text-2xl font-bold text-black dark:text-white mb-2 text-center">{displayName}</h2>
             <p className="text-black dark:text-white text-sm mb-4 text-center flex-1 overflow-hidden">
-                {category.description || 'No description available.'}
+                {displayDescription || 'No description available.'}
             </p>
 
             {category.profileCount !== undefined && (
                 <div className="flex justify-center mb-2">
                     <span className="px-3 py-1 bg-gray-200 dark:bg-gray-800 text-gray-700 dark:text-gray-300 text-xs rounded-full font-medium">
-                        {category.profileCount} {category.profileCount === 1 ? 'profile' : 'profiles'}
+                        {category.profileCount} {profileText}
                     </span>
                 </div>
             )}

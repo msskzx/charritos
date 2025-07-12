@@ -6,6 +6,11 @@ const prisma = new PrismaClient()
 async function main() {
   console.log('🌱 Starting categories seed...')
 
+  // Delete all existing categories first
+  console.log('🗑️  Deleting existing categories...')
+  await prisma.category.deleteMany({})
+  console.log('✅ All existing categories deleted')
+
   // Create categories from the categories page
   for (const category of categories) {
     try {
@@ -14,7 +19,7 @@ async function main() {
       })
       console.log(`✅ Created category: ${createdCategory.name}`)
     } catch (error) {
-      console.error(`❌ Error creating category "${category.name}":`)
+      console.error(`❌ Error creating category "${category.name}":`, error)
     }
   }
 

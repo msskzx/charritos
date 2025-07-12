@@ -28,7 +28,7 @@ const CategoryPage = ({ params }: PageProps) => {
             try {
                 const { id } = await params;
                 
-                const response = await fetch(`/api/categories/${encodeURIComponent(id)}`, {
+                const response = await fetch(`/api/categories/${id}`, {
                     method: 'GET',
                     headers: {
                         'Content-Type': 'application/json',
@@ -37,7 +37,7 @@ const CategoryPage = ({ params }: PageProps) => {
 
                 if (!response.ok) {
                     if (response.status === 404) {
-                        setError('Category not found');
+                        setError(translations[language].categoryNotFound);
                     } else {
                         throw new Error('Failed to fetch category');
                     }
@@ -48,14 +48,14 @@ const CategoryPage = ({ params }: PageProps) => {
                 setCategory(data);
             } catch (error) {
                 console.error('Error fetching category:', error);
-                setError('Failed to load category data');
+                setError(translations[language].failedToLoadCategory);
             } finally {
                 setIsLoading(false);
             }
         };
 
         fetchCategory();
-    }, [params]);
+    }, [params, language]);
 
     if (error) {
         return (
@@ -70,7 +70,7 @@ const CategoryPage = ({ params }: PageProps) => {
                             href="/categories" 
                             className="px-6 py-3 bg-black dark:bg-white text-white dark:text-black rounded-md hover:bg-gray-800 dark:hover:bg-gray-200 transition-colors"
                         >
-                            Back to Categories
+                            {translations[language].backToCategories}
                         </Link>
                     </div>
                 </main>
@@ -115,21 +115,21 @@ const CategoryPage = ({ params }: PageProps) => {
                             <CategoryIcon category={category} className="text-4xl" />
                         </div>
                         <h1 className="text-4xl font-extrabold text-black dark:text-white mb-4 drop-shadow-lg">
-                            {category.name}
+                            {language === 'ar' && category.nameAr ? category.nameAr : category.name}
                         </h1>
-                        {category.description && (
+                        {(language === 'ar' && category.descriptionAr ? category.descriptionAr : category.description) && (
                             <p className="text-lg text-black dark:text-white max-w-2xl mx-auto">
-                                {category.description}
+                                {language === 'ar' && category.descriptionAr ? category.descriptionAr : category.description}
                             </p>
                         )}
                     </div>
                 )}
 
                 {/* Profiles Count */}
-                {category && (
+                {category && category.profileCount !== undefined && (
                     <div className="text-center mb-8">
                         <p className="text-black dark:text-white text-lg">
-                            {category.profileCount} profile{category.profileCount !== 1 ? 's' : ''} found
+                            {category.profileCount} {category.profileCount === 1 ? translations[language].profileCount : translations[language].profileCountPlural} {translations[language].profilesFound(category.profileCount).split(' ').slice(1).join(' ')}
                         </p>
                     </div>
                 )}
@@ -138,7 +138,7 @@ const CategoryPage = ({ params }: PageProps) => {
                 {isLoading && category && (
                     <div className="text-center">
                         <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-gray-900 dark:border-white mx-auto mb-4"></div>
-                        <p className="text-black dark:text-white text-lg">Loading profiles...</p>
+                        <p className="text-black dark:text-white text-lg">{translations[language].loadingProfiles}</p>
                     </div>
                 )}
 
@@ -146,13 +146,13 @@ const CategoryPage = ({ params }: PageProps) => {
                 {!isLoading && category && category.profileCount === 0 ? (
                     <div className="text-center">
                         <p className="text-black dark:text-white text-lg my-8">
-                            No profiles found in this category.
+                            {translations[language].noProfilesInCategory}
                         </p>
                         <Link 
                             href="/profiles" 
                             className="px-6 py-3 bg-black dark:bg-white text-white dark:text-black rounded-md hover:bg-gray-800 dark:hover:bg-gray-200 transition-colors"
                         >
-                            View All Profiles
+                            {translations[language].viewAllProfiles}
                         </Link>
                     </div>
                 ) : !isLoading && category && (
